@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import * as React from 'react'
+import React, { useEffect, useCallback, useMemo } from 'react'
 import * as auth from 'auth-provider'
 import {client} from 'utils/api-client'
 import {useAsync} from 'utils/hooks'
@@ -19,8 +19,8 @@ async function getUser() {
   return user
 }
 
-const AuthContext = React.createContext()
-AuthContext.displayName = 'AuthContext'
+const AuthContext = React.createContext();
+AuthContext.displayName = 'AuthContext';
 
 function AuthProvider(props) {
   const {
@@ -33,34 +33,37 @@ function AuthProvider(props) {
     run,
     setData,
     status,
-  } = useAsync()
+  } = useAsync();
 
-  React.useEffect(() => {
-    const userPromise = getUser()
-    run(userPromise)
-  }, [run])
+  useEffect(() => {
+    const userPromise = getUser();
+    run(userPromise);
+  }, [run]);
 
-  const login = form => auth.login(form).then(user => setData(user))
-  const register = form => auth.register(form).then(user => setData(user))
-  const logout = () => {
-    auth.logout()
-    setData(null)
-  }
+  const login = useCallback((form) => auth.login(form).then(user => setData(user)), [setData]);
+
+  const register = useCallback((form) => auth.register(form).then(user => setData(user)), [setData]);
+
+  const logout = useCallback(() => {
+    auth.logout();
+    setData(null);
+  }, [setData]);
+
+  const value = useMemo(() => ( {user, login, register, logout}), [login, logout, register, user]);
 
   if (isLoading || isIdle) {
-    return <FullPageSpinner />
+    return <FullPageSpinner />;
   }
 
   if (isError) {
-    return <FullPageErrorFallback error={error} />
+    return <FullPageErrorFallback error={error} />;
   }
 
   if (isSuccess) {
-    const value = {user, login, register, logout}
-    return <AuthContext.Provider value={value} {...props} />
+    return <AuthContext.Provider value={value} {...props} />;
   }
 
-  throw new Error(`Unhandled status: ${status}`)
+  throw new Error(`Unhandled status: ${status}`);
 }
 
 function useAuth() {
@@ -74,11 +77,11 @@ function useAuth() {
 function useClient() {
   const {
     user: {token},
-  } = useAuth()
-  return React.useCallback(
+  } = useAuth();
+  return useCallback(
     (endpoint, config) => client(endpoint, {...config, token}),
     [token],
-  )
+  );
 }
 
 export {AuthProvider, useAuth, useClient}
