@@ -6,37 +6,36 @@ import {buildUser, buildBook} from 'test/generate'
 import * as auth from 'auth-provider'
 import {AppProviders} from 'context'
 import {App} from 'app'
+import * as usersDB from 'test/data/users'
+import * as booksDB from 'test/data/books'
+import * as listItemsDB from 'test/data/list-items'
 
 afterAll(async () => {
   queryCache.clear();
-  await auth.logout();
+  await Promise.all([
+    auth.logout(),
+    usersDB.reset(),
+    booksDB.reset(),
+    listItemsDB.reset(),
+  ])
 });
+
+
 
 test('renders all the book information', async () => {
   const user = buildUser({token: 'viet'});
-  window.localStorage.setItem(auth.localStorageKey, user.token);
-  const book = buildBook();
+  await usersDB.create(user)
+  const authUser = await usersDB.authenticate(user)
+  const book = await booksDB.create(buildBook());
 
-  window.history.pushState({}, 'Test page', `book/${book.id}`)
-  window.fetch = (url, config = {}) => {
-    let responseData;
-    if (url.endsWith('/bootstrap')) {
-      responseData = { user, listItems: [] };
-    }
-    if(url.endsWith('/list-items')) {
-      responseData = { listItems: [] };
-    }
-
-    if(url.endsWith(`/books/${book.id}`)) {
-      responseData = { book };
-    }
-
-    return Promise.resolve({ ok: true, json: async () => ({ ...responseData })});
-  };
-
+  window.localStorage.setItem(auth.localStorageKey, authUser.token);
+  window.history.pushState({}, 'Test page', `book/${book.id}`);
   render(<App />, { wrapper: AppProviders });
 
-  await waitForElementToBeRemoved(() => screen.getAllByLabelText(/loading/i));
+  await waitForElementToBeRemoved(() => [
+    ...screen.queryAllByLabelText(/loading/i),
+    ...screen.queryAllByText(/loading/i),
+  ]);
 
   console.log('Screen : ', screen.debug());
   
@@ -46,7 +45,6 @@ test('renders all the book information', async () => {
   expect(screen.getByText(book.publisher)).toBeInTheDocument();
   expect(screen.getByText(book.synopsis)).toBeInTheDocument();
   expect(screen.getByRole('img')).toHaveAttribute('src', book.coverImgUrl);
-
 
   // Assert screen button
   expect(screen.getByRole('button', {name: /add to list/i})).toBeInTheDocument();
