@@ -1,56 +1,124 @@
-// 🐨 you'll need the test server
-// 💰 the way that our tests are set up, you'll find this in `src/test/server/test-server.js`
-// import {server, rest} from 'test/server'
-// 🐨 grab the client
-// import {client} from '../api-client'
+import {server, rest} from 'test/server'
+import {client} from '../api-client'
+import {queryCache} from 'react-query'
+import * as auth from 'auth-provider'
 
-// 🐨 add a beforeAll to start the server with `server.listen()`
-// 🐨 add an afterAll to stop the server when `server.close()`
-// 🐨 afterEach test, reset the server handlers to their original handlers
-// via `server.resetHandlers()`
+const apiURL = process.env.REACT_APP_API_URL;
+const getEndpoint = endpoint => `${apiURL}/${endpoint}`;
+const endpoint = 'test-endpoint';
+const testEndpoint = getEndpoint(endpoint);
+jest.mock('auth-provider');
+jest.mock('react-query');
 
-// 🐨 flesh these out:
+// beforeAll(() => {
+//   server.listen();
+// });
 
-test.todo('calls fetch at the endpoint with the arguments for GET requests')
-// 🐨 add a server handler to handle a test request you'll be making
-// 💰 because this is the first one, I'll give you the code for how to do that.
-// const endpoint = 'test-endpoint'
-// const mockResult = {mockValue: 'VALUE'}
-// server.use(
-//   rest.get(`${apiURL}/${endpoint}`, async (req, res, ctx) => {
-//     return res(ctx.json(mockResult))
-//   }),
-// )
-//
-// 🐨 call the client (don't forget that it's asynchronous)
-// 🐨 assert that the resolved value from the client call is correct
+// afterAll(() => {
+//   server.close();
+// });
 
-test.todo('adds auth token when a token is provided')
-// 🐨 create a fake token (it can be set to any string you want)
-// 🐨 create a "request" variable with let
-// 🐨 create a server handler to handle a test request you'll be making
-// 🐨 inside the server handler, assign "request" to "req" so we can use that
-//     to assert things later.
-//     💰 so, something like...
-//       async (req, res, ctx) => {
-//         request = req
-//         ... etc...
-//
-// 🐨 call the client with the token (note that it's async)
-// 🐨 verify that `request.headers.get('Authorization')` is correct (it should include the token)
+// afterEach(() => {
+//   server.resetHandlers();
+// });
 
-test.todo('allows for config overrides')
-// 🐨 do a very similar setup to the previous test
-// 🐨 create a custom config that specifies properties like "mode" of "cors" and a custom header
-// 🐨 call the client with the endpoint and the custom config
-// 🐨 verify the request had the correct properties
+test('makes GET request with given endpoint', async () => {
+  const mockResult = {
+    mockValue: 'VALUE',
+  }
 
-test.todo(
-  'when data is provided, it is stringified and the method defaults to POST',
-)
-// 🐨 create a mock data object
-// 🐨 create a server handler very similar to the previous ones to handle the post request
-//    💰 Use rest.post instead of rest.get like we've been doing so far
-// 🐨 call client with an endpoint and an object with the data
-//    💰 client(endpoint, {data})
-// 🐨 verify the request.body is equal to the mock data object you passed
+  server.use(
+    rest.get(testEndpoint, async (req, res, ctx) => {
+      return res(ctx.json(mockResult))
+    }),
+  )
+
+  const result = await client(endpoint)
+  expect(result).toEqual(mockResult)
+})
+
+test('makes Authorization request with a provided token', async () => {
+  const fakeToken = 'viet'
+  let request
+
+  server.use(
+    rest.get(testEndpoint, async (req, res, ctx) => {
+      request = req
+      return res(ctx.json({}))
+    }),
+  )
+
+  await client(endpoint, {token: fakeToken})
+  expect(request.headers.get('Authorization')).toBe(`Bearer ${fakeToken}`)
+})
+
+test('makes request with given config', async () => {
+  const fakeToken = 'viet'
+  const authorization = `Bearer ${fakeToken}`
+  const config = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: authorization,
+    },
+  }
+  let request
+
+  server.use(
+    rest.post(testEndpoint, async (req, res, ctx) => {
+      request = req
+      return res(ctx.json({}))
+    }),
+  )
+
+  await client(endpoint, config)
+
+  expect(request.headers.get('Authorization')).toBe(authorization)
+  expect(request.headers.get('Content-Type')).toBe('application/json')
+})
+
+test('makes POST request with given data', async () => {
+  const data = {
+    bookName: 'Harry Poster',
+    bookId: '123456789',
+  }
+  let request
+
+  server.use(
+    rest.post(testEndpoint, async (req, res, ctx) => {
+      request = req
+      return res(ctx.json({}))
+    }),
+  )
+
+  await client(endpoint, {data})
+
+  expect(request.body).toEqual(data)
+})
+
+test('makes Unauthorization request', async () => {
+  server.use(
+    rest.get(testEndpoint, async (_, res, ctx) => {
+      return res(ctx.status(401), ctx.json({}))
+    }),
+  )
+
+  const response = await client(endpoint).catch(err => err);
+  expect(response.message).toMatchInlineSnapshot(`"Please re-authenticate."`);
+
+  expect(queryCache.clear).toHaveBeenCalledTimes(1);
+  expect(auth.logout).toHaveBeenCalledTimes(1);
+});
+
+test('makes BAD request', async () => {
+  const message = 'BAD Request';
+
+  server.use(
+    rest.get(testEndpoint, async (_, res, ctx) => {
+      return res(ctx.status(400), ctx.json({ message }))
+    }),
+  )
+
+  const response = await client(endpoint).catch(err => err);
+  expect(response.message).toBe(message);
+});
