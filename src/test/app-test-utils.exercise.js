@@ -8,6 +8,12 @@ import {App} from 'app'
 import * as usersDB from 'test/data/users'
 import * as booksDB from 'test/data/books'
 
+const waitForLoading = () =>
+  waitForElementToBeRemoved(() => [
+    ...screen.queryAllByLabelText(/loading/i),
+    ...screen.queryAllByText(/loading/i),
+  ]);
+
 const authenticateApp = async () => {
   const user = buildUser({token: 'viet'});
   await usersDB.create(user)
@@ -21,19 +27,9 @@ const renderBookScreen = async () => {
   window.history.pushState({}, 'Test page', `book/${book.id}`);
   render(<App />, { wrapper: AppProviders });
 
-  await waitForElementToBeRemoved(() => [
-    ...screen.queryAllByLabelText(/loading/i),
-    ...screen.queryAllByText(/loading/i),
-  ]);
+  await waitForLoading();
 
   return book;
 }
-
-const waitForLoading = async () => {
-  await waitForElementToBeRemoved(() => [
-    ...screen.queryAllByLabelText(/loading/i),
-    ...screen.queryAllByText(/loading/i),
-  ]);
-};
 
 export { authenticateApp, renderBookScreen, waitForLoading };
