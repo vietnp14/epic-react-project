@@ -1,10 +1,11 @@
 import produce from 'immer';
 import { LIST_ITEMS_ACTIONS } from 'store/actions';
+
 const initialState = {
   listItems: [],
   isLoading: false,
   isUpdating: false,
-  errMessage: undefined,
+  error: undefined,
 };
 
 const listItemReducer = produce((state, action) => {
@@ -20,7 +21,7 @@ const listItemReducer = produce((state, action) => {
       break;
 
     case LIST_ITEMS_ACTIONS.GET_LIST_ITEMS_FAILURE:
-      state.errMessage = action.payload.message;
+      state.error = { message: action.payload.message };
       state.isLoading = false;
       break;
 

@@ -17,11 +17,18 @@ function ListItemList({filterListItems, noListItems, noFilteredListItems}) {
 
   useEffect(() => {
     dispatch(getListItems());
-  }, [dispatch])
+  }, [dispatch]);
+
+  /** TODO: Add loading for list items*/
+  if (isLoading) {
+    return null;
+  }
 
   if (!listItems.length) {
-    return <div css={{marginTop: '1em', fontSize: '1.2em'}}>{noListItems}</div>
-  }
+    return (
+      <div css={{marginTop: '1em', fontSize: '1.2em'}}>{noListItems}</div>
+    );
+  };
 
   if (!filteredListItems.length) {
     return (

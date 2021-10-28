@@ -9,7 +9,7 @@ import {Rating} from './rating'
 import { useListItem } from 'store/selectors'
 
 function BookRow({ book }) {
-  const {title, author, coverImageUrl} = book;
+  const { title, author, coverImageUrl } = book;
   const listItem = useListItem(book.id);
 
   const id = `book-row-book-${book.id}`;

@@ -1,27 +1,34 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import * as React from 'react'
+import React, { useEffect } from 'react'
 import debounceFn from 'debounce-fn'
 import {FaRegCalendarAlt} from 'react-icons/fa'
 import Tooltip from '@reach/tooltip'
 import {useParams} from 'react-router-dom'
-import {useBook} from 'utils/books'
 import {formatDate} from 'utils/misc'
-import {useListItem, useUpdateListItem} from 'utils/list-items'
+import {useUpdateListItem} from 'utils/list-items'
 import * as mq from 'styles/media-queries'
 import * as colors from 'styles/colors'
 import {Spinner, Textarea, ErrorMessage} from 'components/lib'
 import {Rating} from 'components/rating'
 import {Profiler} from 'components/profiler'
 import {StatusButtons} from 'components/status-buttons'
+import { useBook, useCurrentBook, useListItem } from 'store/selectors'
+import { useDispatch } from 'react-redux'
+import { getBook } from 'store/actions'
 
 function BookScreen() {
-  const {bookId} = useParams()
-  const book = useBook(bookId)
-  const listItem = useListItem(bookId)
+  const { bookId } = useParams();
+  const dispatch = useDispatch();
+  const { data: book, isLoading } = useCurrentBook();
+  const listItem = useListItem(bookId);
 
-  const {title, author, coverImageUrl, publisher, synopsis} = book
+  const {title, author, coverImageUrl, publisher, synopsis} = book;
+
+  useEffect(() => {
+    dispatch(getBook(bookId));
+  }, [bookId, dispatch]);
 
   return (
     <Profiler id="Book Screen" metadata={{bookId, listItemId: listItem?.id}}>
@@ -81,7 +88,7 @@ function BookScreen() {
         ) : null}
       </div>
     </Profiler>
-  )
+  );
 }
 
 function ListItemTimeframe({listItem}) {

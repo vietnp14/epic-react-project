@@ -1,37 +1,77 @@
 import produce from 'immer';
+import { combineReducers } from 'redux';
 import { BOOK_ACTIONS } from 'store/actions';
-const initialState = {
-  currentBook: undefined,
-  books: [],
+
+const initialBooks = {
+  data: undefined,
   isLoading: false,
-  isUpdating: false,
-  errMessage: undefined,
+  message: undefined,
+  error: undefined
 };
 
-const bookReducer = produce((state, action) => {
+const initialBook = {
+  data: undefined,
+  isLoading: false,
+  isUpdating: false,
+  error: undefined,
+}
+
+const booksReducer = produce((books, action) => {
   switch (action.type) {
     case BOOK_ACTIONS.GET_BOOKS_REQUEST:
-      state.isLoading = true;
+      books.isLoading = true;
+      books.error = null;
       break;
 
     case BOOK_ACTIONS.GET_BOOKS_SUCCESS:
-      state.isLoading = false;
-      state.books = action.payload.books;
+      const { books: data } = action.payload;
+      books.data = data;
+      books.isLoading = false;
       break;
 
     case BOOK_ACTIONS.GET_BOOKS_FAILURE:
-      state.isLoading = false;
-      state.errMessage = action.payload.message;
-      break;
-
-    case BOOK_ACTIONS.SET_CURRENT_BOOK:
-      const { bookId } = action.payload;
-      state.currentBook = state.books.find((b) => b.id === bookId);
+      const { message } = action.payload;
+      books.error = { message };
+      books.isLoading = false;
       break;
 
     default:
       break;
   }
-}, initialState);
+}, initialBooks);
+
+const currentBook = produce((book, action) => {
+  switch (action.type) {
+    case BOOK_ACTIONS.SET_CURRENT_BOOK:
+      const { bookId } = action.payload;
+      book.data = book.books.find((b) => b.id === bookId);
+      break;
+
+    case BOOK_ACTIONS.GET_BOOK_REQUEST:
+      book.isLoading = true;
+      book.error = null;
+      break;
+
+    case BOOK_ACTIONS.GET_BOOK_SUCCESS:
+      const { book: currentBook } = action.payload;
+      book.data = currentBook;
+      book.isLoading = false;
+      break;
+
+    case BOOK_ACTIONS.GET_BOOK_FAILURE:
+      const { message } = action.payload;
+      book.error = { message };
+      book.isLoading = false;
+      break;
+
+    default:
+      break;
+  }
+}, initialBook);
+
+const bookReducer = combineReducers({
+  book: currentBook,
+  books: booksReducer,
+});
 
 export default bookReducer;

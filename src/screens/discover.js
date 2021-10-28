@@ -9,14 +9,14 @@ import {BookRow} from 'components/book-row'
 import {BookListUL, Spinner, Input} from 'components/lib'
 import {Profiler} from 'components/profiler'
 import { useDispatch } from 'react-redux';
-import { useBookState } from 'store/selectors'
+import { useBooksState } from 'store/selectors'
 import { getBooks } from 'store/actions'
 
 function DiscoverBooksScreen() {
   const dispatch = useDispatch();
   const [query, setQuery] = useState('');
   const [queried, setQueried] = useState();
-  const { books, isLoading, errMessage } = useBookState();
+  const { data: books, isLoading, errMessage } = useBooksState();
   
   const isSuccess = !isLoading && books !== undefined;
   const isError = !!errMessage;
@@ -89,7 +89,7 @@ function DiscoverBooksScreen() {
             ) : null}
           </div>
         )}
-        {books.length ? (
+        {books?.length ? (
           <Profiler
             id="Discover Books Screen Book List"
             metadata={{query, bookCount: books.length}}
