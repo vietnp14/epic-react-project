@@ -5,22 +5,22 @@ import * as React from 'react'
 import {Input, Button, Spinner, FormGroup, ErrorMessage} from './components/lib'
 import {Modal, ModalContents, ModalOpenButton} from './components/modal'
 import {Logo} from './components/logo'
-import {useAuth} from './context/auth-context'
-import {useAsync} from './utils/hooks'
+import { useAuthenticationState } from 'store/selectors'
+import { useDispatch } from 'react-redux'
+import { login, register } from 'store/actions'
 
 function LoginForm({onSubmit, submitButton}) {
-  const {isLoading, isError, error, run} = useAsync()
-  function handleSubmit(event) {
-    event.preventDefault()
-    const {username, password} = event.target.elements
+  const { isLoading, message } = useAuthenticationState();
 
-    run(
-      onSubmit({
-        username: username.value,
-        password: password.value,
-      }),
-    )
-  }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const { username, password } = event.target.elements;
+
+    onSubmit({
+      username: username.value,
+      password: password.value,
+    });
+  };
 
   return (
     <form
@@ -54,13 +54,17 @@ function LoginForm({onSubmit, submitButton}) {
           isLoading ? <Spinner css={{marginLeft: 5}} /> : null,
         )}
       </div>
-      {isError ? <ErrorMessage error={error} /> : null}
+      {message ? <ErrorMessage error={{ message }} /> : null}
     </form>
   )
 }
 
 function UnauthenticatedApp() {
-  const {login, register} = useAuth()
+  const dispatch = useDispatch();
+
+  const handleLoginSubmit = React.useCallback((formValue) => dispatch(login(formValue)), [dispatch]);
+  const handleLoginRegister = React.useCallback((formValue) => dispatch(register(formValue)), [dispatch]);
+
   return (
     <div
       css={{
@@ -87,7 +91,7 @@ function UnauthenticatedApp() {
           </ModalOpenButton>
           <ModalContents aria-label="Login form" title="Login">
             <LoginForm
-              onSubmit={login}
+              onSubmit={handleLoginSubmit}
               submitButton={<Button variant="primary">Login</Button>}
             />
           </ModalContents>
@@ -98,7 +102,7 @@ function UnauthenticatedApp() {
           </ModalOpenButton>
           <ModalContents aria-label="Registration form" title="Register">
             <LoginForm
-              onSubmit={register}
+              onSubmit={handleLoginRegister}
               submitButton={<Button variant="secondary">Register</Button>}
             />
           </ModalContents>

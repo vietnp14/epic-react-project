@@ -1,0 +1,51 @@
+import produce from 'immer';
+import { AUTHENTICATION_ACTIONS } from "store/actions";
+
+const initialState = {
+  user: undefined,
+  isLoading: false,
+  message: undefined,
+};
+
+const authenticationReducer = produce((state, action) => {
+  switch (action.type) {
+    case AUTHENTICATION_ACTIONS.LOGIN_REQUEST:
+      state.message = undefined;
+      state.isLoading = true;
+      break;
+
+    case AUTHENTICATION_ACTIONS.LOGIN_SUCCESS:
+      state.user = action.payload;
+      state.isLoading = false;
+      break;
+
+    case AUTHENTICATION_ACTIONS.LOGIN_FAILURE:
+      state.message = action.payload.message;
+      state.isLoading = false;
+      break;
+
+    case AUTHENTICATION_ACTIONS.REGISTER_REQUEST:
+      state.message = undefined;
+      state.isLoading = true;
+      break;
+
+    case AUTHENTICATION_ACTIONS.REGISTER_SUCCESS:
+      state.user = action.payload;
+      state.isLoading = false;
+      break;
+
+    case AUTHENTICATION_ACTIONS.REGISTER_FAILURE:
+      state.message = action.payload.message;
+      state.isLoading = false;
+      break;
+
+    case AUTHENTICATION_ACTIONS.RESET_AUTH_ERROR_MESSAGE:
+      state.message = undefined;
+      break;
+
+    default:
+      break;
+  }
+}, initialState);
+
+export default authenticationReducer;

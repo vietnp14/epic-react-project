@@ -23,7 +23,8 @@ function useListItems(options = {}) {
         }
       },
     },
-  })
+  });
+
   return listItems ?? []
 }
 

@@ -1,22 +1,23 @@
 const ACTION_PREFIXES = {
   // Prefix for User actions
-  LOGIN: 'LOGIN',
-  REGISTER: 'REGISTER',
-  LOGOUT: 'LOGOUT',
+  LOGIN: 'Login',
+  REGISTER: 'Register',
+  LOGOUT: 'Logout',
+  RESET_AUTH_ERROR_MESSAGE: 'Reset Auth Error Message',
 
   // Prefix for Book actions
-  GET_BOOK: 'GET_BOOK',
-  GET_BOOKS: 'GET_BOOKS',
-  UPDATE_BOOK: 'UPDATE_BOOK',
+  GET_BOOK: 'Get Book',
+  GET_BOOKS: 'Get Books',
+  UPDATE_BOOK: 'Update Book',
 
   // Prefix for List Item actions
-  GET_LIST_ITEMS: 'GET_LIST_ITEMS',
+  GET_LIST_ITEMS: 'Get List Items',
 };
 
 const ACTION_TYPES = {
-  REQUEST: 'REQUEST',
-  SUCCESS: 'SUCCESS',
-  FAILURE: 'FAILURE',
+  REQUEST: 'Request',
+  SUCCESS: 'Success',
+  FAILURE: 'Failure',
 };
 
 const AUTHENTICATION_ACTIONS = {
@@ -24,16 +25,17 @@ const AUTHENTICATION_ACTIONS = {
   LOGIN_REQUEST: 'Login Request',
   LOGIN_SUCCESS: 'Login Success',
   LOGIN_FAILURE: 'Login Failure',
+  RESET_AUTH_ERROR_MESSAGE: 'Reset Auth Error Message',
 
   // Register actions
-  REGISTER_REQUEST: 'Login Request',
-  REGISTER_SUCCESS: 'Login Success',
-  REGISTER_FAILURE: 'Login Failure',
+  REGISTER_REQUEST: 'Register Request',
+  REGISTER_SUCCESS: 'Register Success',
+  REGISTER_FAILURE: 'Register Failure',
 
   // Log out actions
-  LOGOUT_REQUEST: 'Login Request',
-  LOGOUT_SUCCESS: 'Login Success',
-  LOGOUT_FAILURE: 'Login Failure',
+  LOGOUT_REQUEST: 'Logout Request',
+  LOGOUT_SUCCESS: 'Logout Success',
+  LOGOUT_FAILURE: 'Logout Failure',
 };
 
 const BOOK_ACTIONS = {

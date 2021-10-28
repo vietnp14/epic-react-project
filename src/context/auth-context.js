@@ -1,13 +1,14 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import * as React from 'react'
+import React, { useMemo } from 'react'
 import {queryCache} from 'react-query'
 import * as auth from 'auth-provider'
 import {client} from 'utils/api-client'
 import {useAsync} from 'utils/hooks'
 import {setQueryDataForBook} from 'utils/books'
 import {FullPageSpinner, FullPageErrorFallback} from 'components/lib'
+import { useAuthenticationState } from 'store/selectors'
 
 async function bootstrapAppData() {
   let user = null
@@ -45,26 +46,28 @@ function AuthProvider(props) {
   React.useEffect(() => {
     const appDataPromise = bootstrapAppData()
     run(appDataPromise)
-  }, [run])
+  }, [run]);
 
   const login = React.useCallback(
     form => auth.login(form).then(user => setData(user)),
     [setData],
-  )
+  );
+
   const register = React.useCallback(
     form => auth.register(form).then(user => setData(user)),
     [setData],
-  )
+  );
+
   const logout = React.useCallback(() => {
     auth.logout()
     queryCache.clear()
     setData(null)
-  }, [setData])
+  }, [setData]);
 
   const value = React.useMemo(
     () => ({user, login, logout, register}),
     [login, logout, register, user],
-  )
+  );
 
   if (isLoading || isIdle) {
     return <FullPageSpinner />
@@ -90,8 +93,9 @@ function useAuth() {
 }
 
 function useClient() {
-  const {user} = useAuth()
-  const token = user?.token
+  const {user} = useAuthenticationState();
+  const token = useMemo(() => user?.token, [user?.token]);
+
   return React.useCallback(
     (endpoint, config) => client(endpoint, {...config, token}),
     [token],

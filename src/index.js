@@ -1,17 +1,20 @@
-import {loadDevTools} from './dev-tools/load'
-import './bootstrap'
-import * as React from 'react'
-import ReactDOM from 'react-dom'
-import {Profiler} from 'components/profiler'
-import {App} from './app'
-import {AppProviders} from './context'
+import {loadDevTools} from './dev-tools/load';
+import './bootstrap';
+import * as React from 'react';
+import ReactDOM from 'react-dom';
+import {Profiler} from 'components/profiler';
+import {App} from './app';
+import {AppProviders} from './context';
+import AppStoreProvider from 'store';
 
 loadDevTools(() => {
   ReactDOM.render(
     <Profiler id="App Root" phases={['mount']}>
-      <AppProviders>
-        <App />
-      </AppProviders>
+      <AppStoreProvider>
+        <AppProviders>
+          <App />
+        </AppProviders>
+      </AppStoreProvider>
     </Profiler>,
     document.getElementById('root'),
   )

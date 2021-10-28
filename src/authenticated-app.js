@@ -6,12 +6,13 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {Button, ErrorMessage, FullPageErrorFallback} from './components/lib'
 import * as mq from './styles/media-queries'
 import * as colors from './styles/colors'
-import {useAuth} from './context/auth-context'
 import {ReadingListScreen} from './screens/reading-list'
 import {FinishedScreen} from './screens/finished'
 import {DiscoverBooksScreen} from './screens/discover'
 import {BookScreen} from './screens/book'
 import {NotFoundScreen} from './screens/not-found'
+// import { logout } from 'store/actions/authentication.action';
+import { useAuthenticationState } from 'store/selectors/index';
 
 function ErrorFallback({error}) {
   return (
@@ -29,7 +30,8 @@ function ErrorFallback({error}) {
 }
 
 function AuthenticatedApp() {
-  const {user, logout} = useAuth()
+  const { user } = useAuthenticationState();
+
   return (
     <ErrorBoundary FallbackComponent={FullPageErrorFallback}>
       <div
@@ -42,7 +44,8 @@ function AuthenticatedApp() {
         }}
       >
         {user.username}
-        <Button variant="secondary" css={{marginLeft: '10px'}} onClick={logout}>
+        {/** TODO: Create log out function */}
+        <Button variant="secondary" css={{marginLeft: '10px'}} onClick={() => {}}>
           Logout
         </Button>
       </div>
