@@ -5,8 +5,8 @@ import listItemReducer from './list-item.reducer';
 
 const rootReducers = combineReducers({
   authentication: authenticationReducer,
-  listItem: listItemReducer,
   book: bookReducer,
+  listItem: listItemReducer,
 });
 
 export default rootReducers;

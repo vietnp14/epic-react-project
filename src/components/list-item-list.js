@@ -1,19 +1,28 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import {useListItems} from 'utils/list-items'
+import React, { useEffect } from 'react';
 import {BookListUL} from './lib'
 import {BookRow} from './book-row'
 import {Profiler} from './profiler'
+import { useListItemsState } from 'store/selectors'
+import { useDispatch } from 'react-redux';
+import { getListItems } from 'store/actions';
 
 function ListItemList({filterListItems, noListItems, noFilteredListItems}) {
-  const listItems = useListItems()
+  const dispatch = useDispatch();
+  const { listItems, isLoading } = useListItemsState();
 
   const filteredListItems = listItems.filter(filterListItems)
+
+  useEffect(() => {
+    dispatch(getListItems());
+  }, [dispatch])
 
   if (!listItems.length) {
     return <div css={{marginTop: '1em', fontSize: '1.2em'}}>{noListItems}</div>
   }
+
   if (!filteredListItems.length) {
     return (
       <div css={{marginTop: '1em', fontSize: '1.2em'}}>

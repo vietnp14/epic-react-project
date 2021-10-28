@@ -44,6 +44,9 @@ const BOOK_ACTIONS = {
   GET_BOOK_SUCCESS: 'Get Book Success',
   GET_BOOK_FAILURE: 'Get Book Failure',
 
+  // Set current book
+  SET_CURRENT_BOOK: 'Set Current Book',
+
   // Get books
   GET_BOOKS_REQUEST: 'Get Books Request',
   GET_BOOKS_SUCCESS: 'Get Books Success',

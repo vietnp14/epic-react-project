@@ -1,24 +1,29 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import * as React from 'react'
+import React, { useEffect, useState } from 'react'
 import Tooltip from '@reach/tooltip'
 import {FaSearch, FaTimes} from 'react-icons/fa'
 import * as colors from 'styles/colors'
-import {useBookSearch, useRefetchBookSearchQuery} from 'utils/books'
 import {BookRow} from 'components/book-row'
 import {BookListUL, Spinner, Input} from 'components/lib'
 import {Profiler} from 'components/profiler'
+import { useDispatch } from 'react-redux';
+import { useBookState } from 'store/selectors'
+import { getBooks } from 'store/actions'
 
 function DiscoverBooksScreen() {
-  const [query, setQuery] = React.useState('')
-  const [queried, setQueried] = React.useState()
-  const {books, error, isLoading, isError, isSuccess} = useBookSearch(query)
-  const refetchBookSearchQuery = useRefetchBookSearchQuery()
+  const dispatch = useDispatch();
+  const [query, setQuery] = useState('');
+  const [queried, setQueried] = useState();
+  const { books, isLoading, errMessage } = useBookState();
+  
+  const isSuccess = !isLoading && books !== undefined;
+  const isError = !!errMessage;
 
-  React.useEffect(() => {
-    return () => refetchBookSearchQuery()
-  }, [refetchBookSearchQuery])
+  useEffect(() => {
+    dispatch(getBooks(query));
+  }, [dispatch, query]);
 
   function handleSearchClick(event) {
     event.preventDefault()
@@ -62,7 +67,7 @@ function DiscoverBooksScreen() {
         {isError ? (
           <div css={{color: colors.danger}}>
             <p>There was an error:</p>
-            <pre>{error.message}</pre>
+            <pre>{errMessage}</pre>
           </div>
         ) : null}
       </div>
