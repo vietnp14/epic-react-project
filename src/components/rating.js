@@ -1,11 +1,13 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import * as React from 'react'
-import {useUpdateListItem} from 'utils/list-items'
+import { useState, useEffect, Fragment, useCallback } from 'react'
 import {FaStar} from 'react-icons/fa'
 import * as colors from 'styles/colors'
 import {ErrorMessage} from 'components/lib'
+import { useDispatch } from 'react-redux'
+import { updateListItem } from 'store/actions'
+import { useListItemsState } from 'store/selectors'
 
 const visuallyHiddenCSS = {
   border: '0',
@@ -18,12 +20,15 @@ const visuallyHiddenCSS = {
   width: '1px',
 }
 
-function Rating({listItem}) {
-  const [isTabbing, setIsTabbing] = React.useState(false)
+function Rating({ listItem }) {
+  const dispatch = useDispatch();
+  const { error } = useListItemsState();
+  const [isTabbing, setIsTabbing] = useState(false)
+  const isError = !!error;
 
-  const [mutate, {error, isError}] = useUpdateListItem()
+  const handleUpdateClick = useCallback((updates) => dispatch(updateListItem(updates)), [dispatch]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     function handleKeyDown(event) {
       if (event.key === 'Tab') {
         setIsTabbing(true)
@@ -39,7 +44,7 @@ function Rating({listItem}) {
     const ratingId = `rating-${listItem.id}-${i}`
     const ratingValue = i + 1
     return (
-      <React.Fragment key={i}>
+      <Fragment key={i}>
         <input
           name={rootClassName}
           type="radio"
@@ -47,7 +52,7 @@ function Rating({listItem}) {
           value={ratingValue}
           checked={ratingValue === listItem.rating}
           onChange={() => {
-            mutate({id: listItem.id, rating: ratingValue})
+            handleUpdateClick({id: listItem.id, rating: ratingValue})
           }}
           css={[
             visuallyHiddenCSS,
@@ -85,7 +90,7 @@ function Rating({listItem}) {
           </span>
           <FaStar css={{width: '16px', margin: '0 2px'}} />
         </label>
-      </React.Fragment>
+      </Fragment>
     )
   })
   return (

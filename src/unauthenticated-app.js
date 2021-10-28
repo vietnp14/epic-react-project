@@ -6,11 +6,11 @@ import {Input, Button, Spinner, FormGroup, ErrorMessage} from './components/lib'
 import {Modal, ModalContents, ModalOpenButton} from './components/modal'
 import {Logo} from './components/logo'
 import { useAuthenticationState } from 'store/selectors'
-import { useDispatch } from 'react-redux'
 import { login, register } from 'store/actions'
+import { useDispatch } from 'react-redux'
 
 function LoginForm({onSubmit, submitButton}) {
-  const { isLoading, message } = useAuthenticationState();
+  const { isLoading, error } = useAuthenticationState();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -54,7 +54,7 @@ function LoginForm({onSubmit, submitButton}) {
           isLoading ? <Spinner css={{marginLeft: 5}} /> : null,
         )}
       </div>
-      {message ? <ErrorMessage error={{ message }} /> : null}
+      {error ? <ErrorMessage error={error} /> : null}
     </form>
   )
 }

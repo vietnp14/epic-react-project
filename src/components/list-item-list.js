@@ -1,19 +1,19 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import React, { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import {BookListUL} from './lib'
 import {BookRow} from './book-row'
 import {Profiler} from './profiler'
 import { useListItemsState } from 'store/selectors'
-import { useDispatch } from 'react-redux';
 import { getListItems } from 'store/actions';
+import { useDispatch } from 'react-redux';
 
-function ListItemList({filterListItems, noListItems, noFilteredListItems}) {
+function ListItemList({ filterListItems, noListItems, noFilteredListItems }) {
   const dispatch = useDispatch();
   const { listItems, isLoading } = useListItemsState();
 
-  const filteredListItems = listItems.filter(filterListItems)
+  const filteredListItems = useMemo(() => listItems.filter(filterListItems), [filterListItems, listItems]);
 
   useEffect(() => {
     dispatch(getListItems());

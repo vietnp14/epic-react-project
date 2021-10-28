@@ -1,27 +1,27 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import debounceFn from 'debounce-fn'
 import {FaRegCalendarAlt} from 'react-icons/fa'
 import Tooltip from '@reach/tooltip'
 import {useParams} from 'react-router-dom'
 import {formatDate} from 'utils/misc'
-import {useUpdateListItem} from 'utils/list-items'
 import * as mq from 'styles/media-queries'
 import * as colors from 'styles/colors'
 import {Spinner, Textarea, ErrorMessage} from 'components/lib'
 import {Rating} from 'components/rating'
 import {Profiler} from 'components/profiler'
 import {StatusButtons} from 'components/status-buttons'
-import { useBook, useCurrentBook, useListItem } from 'store/selectors'
+import { useCurrentBook, useListItem } from 'store/selectors'
+import { getBook, updateListItem } from 'store/actions'
 import { useDispatch } from 'react-redux'
-import { getBook } from 'store/actions'
+import { useListItems } from 'utils/list-items'
 
 function BookScreen() {
   const { bookId } = useParams();
   const dispatch = useDispatch();
-  const { data: book, isLoading } = useCurrentBook();
+  const { data: book } = useCurrentBook();
   const listItem = useListItem(bookId);
 
   const {title, author, coverImageUrl, publisher, synopsis} = book;
@@ -109,17 +109,20 @@ function ListItemTimeframe({listItem}) {
   )
 }
 
-function NotesTextarea({listItem}) {
-  const [mutate, {error, isError, isLoading}] = useUpdateListItem()
+function NotesTextarea({ listItem }) {
+  const dispatch = useDispatch();
+  const { error, isUpdating } = useListItems();
+  const mutate = useCallback((updates) => dispatch(updateListItem(updates)), [dispatch]);
 
-  const debouncedMutate = React.useMemo(
+  const isError = !!error;
+  const debouncedMutate = useMemo(
     () => debounceFn(mutate, {wait: 300}),
     [mutate],
-  )
+  );
 
   function handleNotesChange(e) {
     debouncedMutate({id: listItem.id, notes: e.target.value})
-  }
+  };
 
   return (
     <React.Fragment>
@@ -143,7 +146,7 @@ function NotesTextarea({listItem}) {
             css={{fontSize: '0.7em'}}
           />
         ) : null}
-        {isLoading ? <Spinner /> : null}
+        {isUpdating ? <Spinner /> : null}
       </div>
       <Textarea
         id="notes"

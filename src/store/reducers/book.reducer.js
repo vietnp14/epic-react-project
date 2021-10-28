@@ -20,6 +20,7 @@ const booksReducer = produce((books, action) => {
   switch (action.type) {
     case BOOK_ACTIONS.GET_BOOKS_REQUEST:
       books.isLoading = true;
+      books.data = null;
       books.error = null;
       break;
 
@@ -43,11 +44,12 @@ const booksReducer = produce((books, action) => {
 const currentBook = produce((book, action) => {
   switch (action.type) {
     case BOOK_ACTIONS.SET_CURRENT_BOOK:
-      const { bookId } = action.payload;
-      book.data = book.books.find((b) => b.id === bookId);
+      const { book: newBook } = action.payload;
+      book.data = newBook;
       break;
 
     case BOOK_ACTIONS.GET_BOOK_REQUEST:
+      book.data = null;
       book.isLoading = true;
       book.error = null;
       break;

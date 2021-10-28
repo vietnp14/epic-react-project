@@ -10,7 +10,14 @@ const loadingBook = {
   loadingBook: true,
 };
 
-const useBooksState = () => useSelector((state) => state.book.books);
+const loadingBooks = Array.from({length: 10}, (v, index) => ({
+  id: `loading-book-${index}`,
+  ...loadingBook,
+}));
+
+const useBooksState = () => useSelector((state) =>
+  ({ ...state.book.books, ...(!state.book.books.data && { data: loadingBooks }) })
+);
 
 const useBook = (bookId) => useSelector((state) =>
   state.book.books.data?.find((b) => b.id === bookId) || loadingBook

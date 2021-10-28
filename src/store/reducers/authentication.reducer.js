@@ -4,13 +4,13 @@ import { AUTHENTICATION_ACTIONS } from "store/actions";
 const initialState = {
   user: undefined,
   isLoading: false,
-  message: undefined,
+  error: undefined,
 };
 
 const authenticationReducer = produce((state, action) => {
   switch (action.type) {
     case AUTHENTICATION_ACTIONS.LOGIN_REQUEST:
-      state.message = undefined;
+      state.error = null;
       state.isLoading = true;
       break;
 
@@ -20,12 +20,12 @@ const authenticationReducer = produce((state, action) => {
       break;
 
     case AUTHENTICATION_ACTIONS.LOGIN_FAILURE:
-      state.message = action.payload.message;
+      state.error = { message: action.payload.message };
       state.isLoading = false;
       break;
 
     case AUTHENTICATION_ACTIONS.REGISTER_REQUEST:
-      state.message = undefined;
+      state.error = null;
       state.isLoading = true;
       break;
 
@@ -35,12 +35,12 @@ const authenticationReducer = produce((state, action) => {
       break;
 
     case AUTHENTICATION_ACTIONS.REGISTER_FAILURE:
-      state.message = action.payload.message;
+      state.error = { message: action.payload.message };
       state.isLoading = false;
       break;
 
     case AUTHENTICATION_ACTIONS.RESET_AUTH_ERROR_MESSAGE:
-      state.message = undefined;
+      state.error = null;
       break;
 
     default:

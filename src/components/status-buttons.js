@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import * as React from 'react'
+import React, { useCallback } from 'react'
 import {
   FaCheckCircle,
   FaPlusCircle,
@@ -10,18 +10,15 @@ import {
   FaTimesCircle,
 } from 'react-icons/fa'
 import Tooltip from '@reach/tooltip'
-import {
-  useListItem,
-  useUpdateListItem,
-  useRemoveListItem,
-  useCreateListItem,
-} from 'utils/list-items'
 import * as colors from 'styles/colors'
 import {useAsync} from 'utils/hooks'
 import {CircleButton, Spinner} from './lib'
+import { useListItem } from 'store/selectors'
+import { useDispatch } from 'react-redux'
+import { addListItem, removeListItem, updateListItem } from 'store/actions'
 
-function TooltipButton({label, highlight, onClick, icon, ...rest}) {
-  const {isLoading, isError, error, run, reset} = useAsync()
+function TooltipButton({ label, highlight, onClick, icon, ...rest }) {
+  const {isLoading, isError, error, run, reset} = useAsync();
 
   function handleClick() {
     if (isError) {
@@ -52,15 +49,18 @@ function TooltipButton({label, highlight, onClick, icon, ...rest}) {
         {isLoading ? <Spinner /> : isError ? <FaTimesCircle /> : icon}
       </CircleButton>
     </Tooltip>
-  )
+  );
 }
 
-function StatusButtons({book}) {
-  const listItem = useListItem(book.id)
+function StatusButtons({ book }) {
+  const dispatch = useDispatch();
+  const listItem = useListItem(book.id);
 
-  const [mutate] = useUpdateListItem({throwOnError: true})
-  const [handleRemoveClick] = useRemoveListItem({throwOnError: true})
-  const [handleAddClick] = useCreateListItem({throwOnError: true})
+  const handleUpdateClick = useCallback((updates) => dispatch(updateListItem(updates)), [dispatch]);
+
+  const handleRemoveClick = useCallback((item) => dispatch(removeListItem(item)), [dispatch]);
+
+  const handleAddClick = useCallback(({ bookId }) => dispatch(addListItem(bookId)), [dispatch]);
 
   return (
     <React.Fragment>
@@ -69,14 +69,14 @@ function StatusButtons({book}) {
           <TooltipButton
             label="Mark as unread"
             highlight={colors.yellow}
-            onClick={() => mutate({id: listItem.id, finishDate: null})}
+            onClick={() => handleUpdateClick({id: listItem.id, finishDate: null})}
             icon={<FaBook />}
           />
         ) : (
           <TooltipButton
             label="Mark as read"
             highlight={colors.green}
-            onClick={() => mutate({id: listItem.id, finishDate: Date.now()})}
+            onClick={() => handleUpdateClick({id: listItem.id, finishDate: Date.now()})}
             icon={<FaCheckCircle />}
           />
         )
@@ -97,7 +97,7 @@ function StatusButtons({book}) {
         />
       )}
     </React.Fragment>
-  )
+  );
 }
 
-export {StatusButtons}
+export { StatusButtons };
