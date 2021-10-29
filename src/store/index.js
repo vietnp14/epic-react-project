@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { loginByToken } from './actions';
 import * as auth from 'auth-provider';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { NotificationContainer } from 'react-notifications';
 
 const AppProviders = ({ children }) => {
   useEffect(() => {
@@ -17,7 +18,10 @@ const AppProviders = ({ children }) => {
 
   return (
     <Router>
-      <Provider store={store}>{children}</Provider>
+      <Provider store={store}>
+        {children}
+        <NotificationContainer />
+      </Provider>
     </Router>
   );
 }

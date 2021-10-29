@@ -5,3 +5,4 @@ import '@reach/dialog/styles.css'
 import '@reach/menu-button/styles.css'
 import '@reach/tooltip/styles.css'
 import './styles/global.css'
+import 'react-notifications/lib/notifications.css';

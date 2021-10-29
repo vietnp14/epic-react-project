@@ -1,19 +1,17 @@
 import produce from 'immer';
 import { combineReducers } from 'redux';
 import { BOOK_ACTIONS } from 'store/actions';
+import { notification } from 'utils/notification';
 
 const initialBooks = {
   data: undefined,
   isLoading: false,
-  message: undefined,
-  error: undefined
 };
 
 const initialBook = {
   data: undefined,
   isLoading: false,
   isUpdating: false,
-  error: undefined,
 }
 
 const booksReducer = produce((books, action) => {
@@ -31,8 +29,8 @@ const booksReducer = produce((books, action) => {
       break;
 
     case BOOK_ACTIONS.GET_BOOKS_FAILURE:
-      const { message } = action.data;
-      books.error = { message };
+      const { message } = action.payload;
+      notification.error(BOOK_ACTIONS.GET_BOOKS_FAILURE, message);
       books.isLoading = false;
       break;
 
@@ -43,15 +41,9 @@ const booksReducer = produce((books, action) => {
 
 const currentBook = produce((book, action) => {
   switch (action.type) {
-    case BOOK_ACTIONS.SET_CURRENT_BOOK:
-      const { book: newBook } = action.data;
-      book.data = newBook;
-      break;
-
     case BOOK_ACTIONS.GET_BOOK_REQUEST:
       book.data = null;
       book.isLoading = true;
-      book.error = null;
       break;
 
     case BOOK_ACTIONS.GET_BOOK_SUCCESS:
@@ -62,7 +54,7 @@ const currentBook = produce((book, action) => {
 
     case BOOK_ACTIONS.GET_BOOK_FAILURE:
       const { message } = action.payload;
-      book.error = { message };
+      notification.error(BOOK_ACTIONS.GET_BOOK_FAILURE, message);
       book.isLoading = false;
       break;
 

@@ -1,11 +1,11 @@
 import produce from 'immer';
 import { LIST_ITEMS_ACTIONS } from 'store/actions';
+import { notification } from 'utils/notification';
 
 const initialState = {
   listItems: [],
   isLoading: false,
   isUpdating: false,
-  error: undefined,
 };
 
 const listItemReducer = produce((state, action) => {
@@ -37,7 +37,7 @@ const listItemReducer = produce((state, action) => {
       break;
 
     case LIST_ITEMS_ACTIONS.ADD_LIST_ITEM_FAILURE:
-      state.error = { message: action.payload.message };
+      notification.error(LIST_ITEMS_ACTIONS.UPDATE_LIST_ITEM_FAILURE, action.payload.message);
       state.isUpdate = false;
       break;
 
@@ -47,19 +47,19 @@ const listItemReducer = produce((state, action) => {
       break;
 
     case LIST_ITEMS_ACTIONS.UPDATE_LIST_ITEM_SUCCESS:
-      const { listItem } = action.data; 
+      const { listItem } = action.data;
       state.listItems = state.listItems.map((li) => {
         if (listItem.id === li.id) {
           return { ...li, ...listItem };
         };
-        
+
         return li;
       });
       state.isUpdating = false;
       break;
 
     case LIST_ITEMS_ACTIONS.UPDATE_LIST_ITEM_FAILURE:
-      state.error = { message: action.payload.message };
+      notification.error(LIST_ITEMS_ACTIONS.UPDATE_LIST_ITEM_FAILURE, action.payload.message);
       state.isUpdating = false;
       break;
 
@@ -75,7 +75,7 @@ const listItemReducer = produce((state, action) => {
       break;
 
     case LIST_ITEMS_ACTIONS.REMOVE_LIST_ITEM_FAILURE:
-      state.error = { message: action.payload.message };
+      notification.error(LIST_ITEMS_ACTIONS.REMOVE_LIST_ITEM_FAILURE, action.payload.message);
       state.isUpdating = false;
       break;
 

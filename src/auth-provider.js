@@ -25,6 +25,8 @@ function register({username, password}) {
 
 async function logout() {
   window.localStorage.removeItem(localStorageKey)
+  // refresh the page for them
+  window.location.assign(window.location)
 }
 
 // an auth provider wouldn't use your client, they'd have their own

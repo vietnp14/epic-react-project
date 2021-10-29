@@ -3,7 +3,7 @@ import {jsx} from '@emotion/core'
 
 import {Routes, Route, Link as RouterLink, useMatch} from 'react-router-dom'
 import {ErrorBoundary} from 'react-error-boundary'
-import {Button, ErrorMessage, FullPageErrorFallback, FullPageSpinner} from './components/lib'
+import {Button, ErrorMessage, FullPageErrorFallback} from './components/lib'
 import * as mq from './styles/media-queries'
 import * as colors from './styles/colors'
 import {ReadingListScreen} from './screens/reading-list'
@@ -11,7 +11,7 @@ import {FinishedScreen} from './screens/finished'
 import {DiscoverBooksScreen} from './screens/discover'
 import {BookScreen} from './screens/book'
 import {NotFoundScreen} from './screens/not-found'
-// import { logout } from 'store/actions/authentication.action';
+import { logout } from 'auth-provider';
 import { useAuthenticationState } from 'store/selectors/index';
 
 function ErrorFallback({error}) {
@@ -44,8 +44,7 @@ function AuthenticatedApp() {
         }}
       >
         {user.username}
-        {/** TODO: Create log out function */}
-        <Button variant="secondary" css={{marginLeft: '10px'}} onClick={() => {}}>
+        <Button variant="secondary" css={{marginLeft: '10px'}} onClick={logout}>
           Logout
         </Button>
       </div>
@@ -113,7 +112,7 @@ function NavLink(props) {
   )
 }
 
-function Nav(params) {
+function Nav() {
   return (
     <nav
       css={{

@@ -18,30 +18,31 @@ const visuallyHiddenCSS = {
   padding: '0',
   position: 'absolute',
   width: '1px',
-}
+};
 
 function Rating({ listItem }) {
   const dispatch = useDispatch();
-  const { run, isError, error } = useAsync();
-  const [isTabbing, setIsTabbing] = useState(false)
+  const { run } = useAsync();
+  const [isTabbing, setIsTabbing] = useState(false);
 
   const handleUpdateClick = useCallback((updates) => run(dispatch(updateListItem(updates))), [dispatch, run]);
 
   useEffect(() => {
     function handleKeyDown(event) {
       if (event.key === 'Tab') {
-        setIsTabbing(true)
+        setIsTabbing(true);
       }
     }
-    document.addEventListener('keydown', handleKeyDown, {once: true})
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [])
+    document.addEventListener('keydown', handleKeyDown, {once: true});
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
-  const rootClassName = `list-item-${listItem.id}`
+  const rootClassName = `list-item-${listItem.id}`;
 
   const stars = Array.from({length: 5}).map((x, i) => {
-    const ratingId = `rating-${listItem.id}-${i}`
-    const ratingValue = i + 1
+    const ratingId = `rating-${listItem.id}-${i}`;
+    const ratingValue = i + 1;
+
     return (
       <Fragment key={i}>
         <input
@@ -90,8 +91,9 @@ function Rating({ listItem }) {
           <FaStar css={{width: '16px', margin: '0 2px'}} />
         </label>
       </Fragment>
-    )
-  })
+    );
+  });
+
   return (
     <div
       onClick={e => e.stopPropagation()}
@@ -105,15 +107,8 @@ function Rating({ listItem }) {
       }}
     >
       <span css={{display: 'flex'}}>{stars}</span>
-      {isError ? (
-        <ErrorMessage
-          error={error}
-          variant="inline"
-          css={{marginLeft: 6, fontSize: '0.7em'}}
-        />
-      ) : null}
     </div>
-  )
+  );
 }
 
-export {Rating}
+export { Rating };
