@@ -2,7 +2,7 @@
 import {jsx} from '@emotion/core'
 
 import { useEffect, useMemo } from 'react';
-import {BookListUL} from './lib'
+import {BookListUL, Spinner} from './lib'
 import {BookRow} from './book-row'
 import {Profiler} from './profiler'
 import { useListItemsState } from 'store/selectors'
@@ -19,9 +19,12 @@ function ListItemList({ filterListItems, noListItems, noFilteredListItems }) {
     dispatch(getListItems());
   }, [dispatch]);
 
-  /** TODO: Add loading for list items*/
   if (isLoading) {
-    return null;
+    return (
+      <div css={{width: '100%', margin: 'auto', textAlign: 'center'}}>
+        <Spinner />
+      </div>
+    );
   }
 
   if (!listItems.length) {
