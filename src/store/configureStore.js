@@ -1,13 +1,26 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import rootReducers from './reducers';
 
-const composeEnhancers = (process.env.NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+const isDevEnvironment = process.env.NODE_ENV === 'development';
+const composeEnhancers = (isDevEnvironment && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 
-const loggerMiddleware = (store) => (next) => (action) => {
-  console.info('Prev store : ', store.getState());
-  console.info('Action : ', action);
-  console.info('Next middleware : ', next);
-  return next(action);
+const loggerMiddleware = (store) => (next) =>{
+  if (!console.group) {
+    return next;
+  };
+
+  return (action) => {
+    const isFuncAction = typeof action === 'function';
+    console.group(isFuncAction ? typeof action : action.type);
+
+    console.log('%c Prev state', 'color: red', store.getState());
+    console.log('%c Action', 'color: blue', action);
+    const returnValue = next(action);
+
+    console.log('%c Next state', 'color: green', store.getState());
+    console.groupEnd(action.type);
+    return returnValue;
+  }
 };
 
 const asyncMiddleware = (_) => (next) => (action) => {
@@ -15,13 +28,15 @@ const asyncMiddleware = (_) => (next) => (action) => {
   return next(action);
 };
 
+const middlewares = [
+  asyncMiddleware,
+  ...(isDevEnvironment && [loggerMiddleware]),
+] ;
+
 const store = createStore(
   rootReducers,
   composeEnhancers(
-    applyMiddleware(
-      loggerMiddleware,
-      asyncMiddleware
-    )
+    applyMiddleware(...middlewares),
   )
 );
 

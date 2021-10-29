@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import {BookListUL, Spinner} from './lib'
 import {BookRow} from './book-row'
 import {Profiler} from './profiler'
@@ -13,7 +13,7 @@ function ListItemList({ filterListItems, noListItems, noFilteredListItems }) {
   const dispatch = useDispatch();
   const { listItems, isLoading } = useListItemsState();
 
-  const filteredListItems = useMemo(() => listItems.filter(filterListItems), [filterListItems, listItems]);
+  const filteredListItems = listItems.filter(filterListItems);
 
   useEffect(() => {
     dispatch(getListItems());
