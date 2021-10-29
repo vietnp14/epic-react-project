@@ -3,7 +3,7 @@ const ACTION_PREFIXES = {
   LOGIN: 'Login',
   REGISTER: 'Register',
   LOGOUT: 'Logout',
-  RESET_AUTH_ERROR_MESSAGE: 'Reset Auth Error Message',
+  RESET_AUTH_ERROR: 'Reset Auth Error',
 
   // Prefix for Book's actions
   GET_BOOK: 'Get Book',
@@ -17,6 +17,7 @@ const ACTION_PREFIXES = {
   ADD_LIST_ITEM: 'Add List Item',
   UPDATE_LIST_ITEM: 'Update List Item',
   REMOVE_LIST_ITEM: 'Remove List Item',
+  RESET_LIST_ITEM_ERROR: 'Reset List Item Error',
 };
 
 const ACTION_TYPES = {
@@ -30,7 +31,7 @@ const AUTHENTICATION_ACTIONS = {
   LOGIN_REQUEST: 'Login Request',
   LOGIN_SUCCESS: 'Login Success',
   LOGIN_FAILURE: 'Login Failure',
-  RESET_AUTH_ERROR_MESSAGE: 'Reset Auth Error Message',
+  RESET_AUTH_ERROR: 'Reset Auth Error',
 
   // Register actions
   REGISTER_REQUEST: 'Register Request',
@@ -83,6 +84,9 @@ const LIST_ITEMS_ACTIONS = {
   REMOVE_LIST_ITEM_REQUEST: 'Remove List Item Request',
   REMOVE_LIST_ITEM_SUCCESS: 'Remove List Item Success',
   REMOVE_LIST_ITEM_FAILURE: 'Remove List Item Failure',
+
+  // Reset list item error
+  RESET_LIST_ITEM_ERROR: 'Reset List Item Error',
 };
 
 export {

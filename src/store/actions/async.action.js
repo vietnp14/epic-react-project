@@ -17,15 +17,15 @@ const createFailureAction = (prefix, { message }) => ({
   },
 });
 
-const doAsyncAction = (prefix, payload, request, ...args) => async (dispatch) => {
+const creatAsyncAction = (prefix, payload, request, ...args) => async (dispatch) => {
   dispatch(createRequestAction(prefix, payload));
 
   try {
     const result = await request(...args);
-    dispatch(createSuccessAction(prefix, result));
+    return dispatch(createSuccessAction(prefix, result));
   } catch (err) {
-    dispatch(createFailureAction(prefix, err))
+    return dispatch(createFailureAction(prefix, err))
   }
 };
 
-export default doAsyncAction;
+export default creatAsyncAction;

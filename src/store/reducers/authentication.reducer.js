@@ -15,7 +15,7 @@ const authenticationReducer = produce((state, action) => {
       break;
 
     case AUTHENTICATION_ACTIONS.LOGIN_SUCCESS:
-      state.user = action.payload;
+      state.user = action.payload.user;
       state.isLoading = false;
       break;
 
@@ -30,7 +30,7 @@ const authenticationReducer = produce((state, action) => {
       break;
 
     case AUTHENTICATION_ACTIONS.REGISTER_SUCCESS:
-      state.user = action.payload;
+      state.user = action.payload.user;
       state.isLoading = false;
       break;
 
