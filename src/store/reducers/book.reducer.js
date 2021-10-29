@@ -11,7 +11,6 @@ const initialBooks = {
 const initialBook = {
   data: undefined,
   isLoading: false,
-  isUpdating: false,
 }
 
 const booksReducer = produce((books, action) => {

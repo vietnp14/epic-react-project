@@ -7,6 +7,7 @@ import * as colors from 'styles/colors'
 import { useDispatch } from 'react-redux'
 import { updateListItem } from 'store/actions'
 import { useAsync } from 'utils/hooks'
+import { Spinner } from './lib'
 
 const visuallyHiddenCSS = {
   border: '0',
@@ -21,7 +22,7 @@ const visuallyHiddenCSS = {
 
 function Rating({ listItem }) {
   const dispatch = useDispatch();
-  const { run } = useAsync();
+  const { run, isLoading } = useAsync();
   const [isTabbing, setIsTabbing] = useState(false);
 
   const handleUpdateClick = useCallback((updates) => run(dispatch(updateListItem(updates))), [dispatch, run]);
@@ -105,7 +106,8 @@ function Rating({ listItem }) {
         },
       }}
     >
-      <span css={{display: 'flex'}}>{stars}</span>
+      <span css={{display: 'flex'}}>{stars} &nbsp;</span>
+      {isLoading ? <Spinner /> : null}
     </div>
   );
 }

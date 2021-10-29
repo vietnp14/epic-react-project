@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import React, { useMemo } from 'react'
+import * as React from 'react'
 import {queryCache} from 'react-query'
 import * as auth from 'auth-provider'
 import {client} from 'utils/api-client'
@@ -46,28 +46,28 @@ function AuthProvider(props) {
   React.useEffect(() => {
     const appDataPromise = bootstrapAppData()
     run(appDataPromise)
-  }, [run]);
+  }, [run])
 
   const login = React.useCallback(
     form => auth.login(form).then(user => setData(user)),
     [setData],
-  );
+  )
 
   const register = React.useCallback(
     form => auth.register(form).then(user => setData(user)),
     [setData],
-  );
+  )
 
   const logout = React.useCallback(() => {
     auth.logout()
     queryCache.clear()
     setData(null)
-  }, [setData]);
+  }, [setData])
 
   const value = React.useMemo(
     () => ({user, login, logout, register}),
     [login, logout, register, user],
-  );
+  )
 
   if (isLoading || isIdle) {
     return <FullPageSpinner />
@@ -94,7 +94,7 @@ function useAuth() {
 
 function useClient() {
   const {user} = useAuthenticationState();
-  const token = useMemo(() => user?.token, [user?.token]);
+  const token = user?.token;
 
   return React.useCallback(
     (endpoint, config) => client(endpoint, {...config, token}),

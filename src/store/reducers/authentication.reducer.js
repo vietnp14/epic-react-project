@@ -4,7 +4,6 @@ import { notification } from 'utils/notification';
 
 const initialState = {
   user: undefined,
-  token: undefined,
   isLoading: false,
 };
 

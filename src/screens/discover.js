@@ -11,19 +11,19 @@ import {Profiler} from 'components/profiler'
 import { useBooksState } from 'store/selectors'
 import { getBooks } from 'store/actions'
 import { useDispatch } from 'react-redux'
+import { useAsync } from 'utils/hooks'
 
 function DiscoverBooksScreen() {
   const dispatch = useDispatch();
+  const { run, isLoading, isSuccess, isError, error } = useAsync();
   const [query, setQuery] = useState('');
   const [queried, setQueried] = useState();
-  const { data: books, isLoading, errMessage } = useBooksState();
-  
-  const isSuccess = !isLoading && books !== undefined;
-  const isError = !!errMessage;
+  const { data: books } = useBooksState();
+
 
   useEffect(() => {
-    dispatch(getBooks(query));
-  }, [dispatch, query]);
+    run(dispatch(getBooks(query)));
+  }, [dispatch, query, run]);
 
   function handleSearchClick(event) {
     event.preventDefault()
@@ -67,7 +67,7 @@ function DiscoverBooksScreen() {
         {isError ? (
           <div css={{color: colors.danger}}>
             <p>There was an error:</p>
-            <pre>{errMessage}</pre>
+            <pre>{error.message}</pre>
           </div>
         ) : null}
       </div>

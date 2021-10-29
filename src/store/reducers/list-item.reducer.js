@@ -3,7 +3,7 @@ import { LIST_ITEMS_ACTIONS } from 'store/actions';
 import { notification } from 'utils/notification';
 
 const initialState = {
-  listItems: [],
+  listItems: undefined,
   isLoading: false,
   isUpdating: false,
 };

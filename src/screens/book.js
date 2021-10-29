@@ -13,10 +13,10 @@ import {Spinner, Textarea} from 'components/lib'
 import {Rating} from 'components/rating'
 import {Profiler} from 'components/profiler'
 import {StatusButtons} from 'components/status-buttons'
-import { useCurrentBook, useListItem } from 'store/selectors'
+import { useCurrentBook, useListItem, useListItemsState } from 'store/selectors'
 import { getBook, updateListItem } from 'store/actions'
 import { useDispatch } from 'react-redux'
-import { useListItems } from 'utils/list-items'
+import { useAsync } from 'utils/hooks'
 
 function BookScreen() {
   const { bookId } = useParams();
@@ -111,8 +111,8 @@ function ListItemTimeframe({listItem}) {
 
 function NotesTextarea({ listItem }) {
   const dispatch = useDispatch();
-  const { isUpdating } = useListItems();
-  const mutate = useCallback((updates) => dispatch(updateListItem(updates)), [dispatch]);
+  const { isLoading, run } = useAsync();
+  const mutate = useCallback((updates) => run(dispatch(updateListItem(updates))), [dispatch, run]);
 
   const debouncedMutate = useMemo(
     () => debounceFn(mutate, {wait: 300}),
@@ -138,7 +138,7 @@ function NotesTextarea({ listItem }) {
         >
           Notes
         </label>
-        {isUpdating ? <Spinner /> : null}
+        {isLoading ? <Spinner /> : null}
       </div>
       <Textarea
         id="notes"

@@ -10,9 +10,7 @@ const loggerMiddleware = (store) => (next) =>{
   };
 
   return (action) => {
-    const isFuncAction = typeof action === 'function';
-    console.group(isFuncAction ? typeof action : action.type);
-
+    console.group(action.type);
     console.log('%c Prev state', 'color: red', store.getState());
     console.log('%c Action', 'color: blue', action);
     const returnValue = next(action);

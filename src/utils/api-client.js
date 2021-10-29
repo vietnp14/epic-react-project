@@ -22,7 +22,6 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
   async (response) => {
     if (response.status === 401) {
-      queryCache.clear();
       await auth.logout();
       // refresh the page for them
       window.location.assign(window.location);
@@ -73,4 +72,4 @@ async function client(
   })
 }
 
-export {client, axiosClient }
+export { client, axiosClient }
