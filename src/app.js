@@ -8,11 +8,11 @@ const AuthenticatedApp = React.lazy(() =>
 const UnauthenticatedApp = React.lazy(() => import('./unauthenticated-app'))
 
 function App() {
-  const { token, isLoading, user } = useAuthenticationState();
+  const { user } = useAuthenticationState();
 
   return (
     <React.Suspense fallback={<FullPageSpinner />}>
-      {token && !isLoading && user ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+      {user ? <AuthenticatedApp /> : <UnauthenticatedApp />}
     </React.Suspense>
   );
 }

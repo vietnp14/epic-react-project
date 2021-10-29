@@ -2,7 +2,7 @@
 import {jsx} from '@emotion/core'
 
 import { useCallback, cloneElement } from 'react'
-import {Input, Button, Spinner, FormGroup, ErrorMessage} from './components/lib'
+import {Input, Button, Spinner, FormGroup} from './components/lib'
 import {Modal, ModalContents, ModalOpenButton} from './components/modal'
 import {Logo} from './components/logo'
 import { login, register } from 'store/actions'
@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux'
 import { useAsync } from 'utils/hooks'
 
 function LoginForm({onSubmit, submitButton}) {
-  const { isError, error, isLoading, run } = useAsync();
+  const { isLoading, run } = useAsync();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -56,7 +56,6 @@ function LoginForm({onSubmit, submitButton}) {
           isLoading ? <Spinner css={{marginLeft: 5}} /> : null,
         )}
       </div>
-      {isError ? <ErrorMessage error={error} /> : null}
     </form>
   )
 }
