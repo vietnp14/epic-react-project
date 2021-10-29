@@ -5,9 +5,10 @@ const createRequestAction = (prefix, payload) => ({
   payload,
 });
 
-const createSuccessAction = (prefix, payload) => ({
+const createSuccessAction = (prefix, payload, data) => ({
   type: `${prefix} ${ACTION_TYPES.SUCCESS}`,
   payload,
+  data,
 });
 
 const createFailureAction = (prefix, { message }) => ({
@@ -22,9 +23,10 @@ const creatAsyncAction = (prefix, payload, request, ...args) => async (dispatch)
 
   try {
     const result = await request(...args);
-    return dispatch(createSuccessAction(prefix, result));
+    return dispatch(createSuccessAction(prefix, payload, result));
   } catch (err) {
-    return dispatch(createFailureAction(prefix, err))
+    dispatch(createFailureAction(prefix, err))
+    throw err;
   }
 };
 

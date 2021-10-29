@@ -1,25 +1,27 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import * as React from 'react'
+import { useCallback, cloneElement } from 'react'
 import {Input, Button, Spinner, FormGroup, ErrorMessage} from './components/lib'
 import {Modal, ModalContents, ModalOpenButton} from './components/modal'
 import {Logo} from './components/logo'
-import { useAuthenticationState } from 'store/selectors'
 import { login, register } from 'store/actions'
 import { useDispatch } from 'react-redux'
+import { useAsync } from 'utils/hooks'
 
 function LoginForm({onSubmit, submitButton}) {
-  const { isLoading, error } = useAuthenticationState();
+  const { isError, error, isLoading, run } = useAsync();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const { username, password } = event.target.elements;
 
-    onSubmit({
+    run(
+      onSubmit({
       username: username.value,
       password: password.value,
-    });
+      })
+    );
   };
 
   return (
@@ -45,7 +47,7 @@ function LoginForm({onSubmit, submitButton}) {
         <Input id="password" type="password" />
       </FormGroup>
       <div>
-        {React.cloneElement(
+        {cloneElement(
           submitButton,
           {type: 'submit'},
           ...(Array.isArray(submitButton.props.children)
@@ -54,7 +56,7 @@ function LoginForm({onSubmit, submitButton}) {
           isLoading ? <Spinner css={{marginLeft: 5}} /> : null,
         )}
       </div>
-      {error ? <ErrorMessage error={error} /> : null}
+      {isError ? <ErrorMessage error={error} /> : null}
     </form>
   )
 }
@@ -62,8 +64,8 @@ function LoginForm({onSubmit, submitButton}) {
 function UnauthenticatedApp() {
   const dispatch = useDispatch();
 
-  const handleLoginSubmit = React.useCallback((formValue) => dispatch(login(formValue)), [dispatch]);
-  const handleLoginRegister = React.useCallback((formValue) => dispatch(register(formValue)), [dispatch]);
+  const handleLoginSubmit = useCallback((formValue) => dispatch(login(formValue)), [dispatch]);
+  const handleLoginRegister = useCallback((formValue) => dispatch(register(formValue)), [dispatch]);
 
   return (
     <div
@@ -109,7 +111,7 @@ function UnauthenticatedApp() {
         </Modal>
       </div>
     </div>
-  )
+  );
 }
 
-export default UnauthenticatedApp
+export default UnauthenticatedApp;

@@ -25,13 +25,13 @@ const booksReducer = produce((books, action) => {
       break;
 
     case BOOK_ACTIONS.GET_BOOKS_SUCCESS:
-      const { books: data } = action.payload;
+      const { books: data } = action.data;
       books.data = data;
       books.isLoading = false;
       break;
 
     case BOOK_ACTIONS.GET_BOOKS_FAILURE:
-      const { message } = action.payload;
+      const { message } = action.data;
       books.error = { message };
       books.isLoading = false;
       break;
@@ -44,7 +44,7 @@ const booksReducer = produce((books, action) => {
 const currentBook = produce((book, action) => {
   switch (action.type) {
     case BOOK_ACTIONS.SET_CURRENT_BOOK:
-      const { book: newBook } = action.payload;
+      const { book: newBook } = action.data;
       book.data = newBook;
       break;
 
@@ -55,7 +55,7 @@ const currentBook = produce((book, action) => {
       break;
 
     case BOOK_ACTIONS.GET_BOOK_SUCCESS:
-      const { book: currentBook } = action.payload;
+      const { book: currentBook } = action.data;
       book.data = currentBook;
       book.isLoading = false;
       break;

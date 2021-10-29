@@ -57,6 +57,7 @@ function useAsync(initialState) {
           return data
         },
         error => {
+          console.log('Error : ', error);
           setError(error)
           return Promise.reject(error)
         },

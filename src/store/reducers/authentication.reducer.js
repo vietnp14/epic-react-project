@@ -3,8 +3,8 @@ import { AUTHENTICATION_ACTIONS } from "store/actions";
 
 const initialState = {
   user: undefined,
+  token: undefined,
   isLoading: false,
-  error: undefined,
 };
 
 const authenticationReducer = produce((state, action) => {
@@ -15,7 +15,7 @@ const authenticationReducer = produce((state, action) => {
       break;
 
     case AUTHENTICATION_ACTIONS.LOGIN_SUCCESS:
-      state.user = action.payload.user;
+      state.user = action.data.user;
       state.isLoading = false;
       break;
 
@@ -30,17 +30,13 @@ const authenticationReducer = produce((state, action) => {
       break;
 
     case AUTHENTICATION_ACTIONS.REGISTER_SUCCESS:
-      state.user = action.payload.user;
+      state.user = action.data;
       state.isLoading = false;
       break;
 
     case AUTHENTICATION_ACTIONS.REGISTER_FAILURE:
       state.error = { message: action.payload.message };
       state.isLoading = false;
-      break;
-
-    case AUTHENTICATION_ACTIONS.RESET_AUTH_ERROR_MESSAGE:
-      state.error = null;
       break;
 
     default:

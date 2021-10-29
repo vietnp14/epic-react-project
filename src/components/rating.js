@@ -7,7 +7,7 @@ import * as colors from 'styles/colors'
 import {ErrorMessage} from 'components/lib'
 import { useDispatch } from 'react-redux'
 import { updateListItem } from 'store/actions'
-import { useListItemsState } from 'store/selectors'
+import { useAsync } from 'utils/hooks'
 
 const visuallyHiddenCSS = {
   border: '0',
@@ -22,11 +22,10 @@ const visuallyHiddenCSS = {
 
 function Rating({ listItem }) {
   const dispatch = useDispatch();
-  const { error } = useListItemsState();
+  const { run, isError, error } = useAsync();
   const [isTabbing, setIsTabbing] = useState(false)
-  const isError = !!error;
 
-  const handleUpdateClick = useCallback((updates) => dispatch(updateListItem(updates)), [dispatch]);
+  const handleUpdateClick = useCallback((updates) => run(dispatch(updateListItem(updates))), [dispatch, run]);
 
   useEffect(() => {
     function handleKeyDown(event) {

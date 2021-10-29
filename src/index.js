@@ -4,16 +4,13 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 import {Profiler} from 'components/profiler';
 import {App} from './app';
-import {AppProviders} from './context';
 import AppStoreProvider from 'store';
 
 loadDevTools(() => {
   ReactDOM.render(
     <Profiler id="App Root" phases={['mount']}>
       <AppStoreProvider>
-        <AppProviders>
           <App />
-        </AppProviders>
       </AppStoreProvider>
     </Profiler>,
     document.getElementById('root'),

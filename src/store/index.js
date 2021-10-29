@@ -3,8 +3,9 @@ import store from './configureStore';
 import { Provider } from 'react-redux';
 import { loginByToken } from './actions';
 import * as auth from 'auth-provider';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-const AppStoreProvider = ({ children }) => {
+const AppProviders = ({ children }) => {
   useEffect(() => {
     (async () => {
       const token = await auth.getToken();
@@ -14,7 +15,11 @@ const AppStoreProvider = ({ children }) => {
     })();
   }, []);
 
-  return (<Provider store={store}>{children}</Provider>);
+  return (
+    <Router>
+      <Provider store={store}>{children}</Provider>
+    </Router>
+  );
 }
 
-export default AppStoreProvider;
+export default AppProviders;
