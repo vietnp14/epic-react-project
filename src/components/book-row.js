@@ -4,8 +4,8 @@ import {jsx} from '@emotion/core'
 import {Link} from 'react-router-dom'
 import * as mq from 'styles/media-queries'
 import * as colors from 'styles/colors'
-import {StatusButtons} from './status-buttons'
-import {Rating} from './rating'
+import StatusButtons from './Status-buttons'
+import Rating from './Rating'
 import { useListItem } from 'store/selectors'
 
 function BookRow({ book }) {
@@ -108,4 +108,4 @@ function BookRow({ book }) {
   );
 };
 
-export { BookRow };
+export default BookRow;

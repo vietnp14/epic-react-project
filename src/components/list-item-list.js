@@ -3,8 +3,8 @@ import {jsx} from '@emotion/core'
 
 import { useEffect } from 'react';
 import {BookListUL, Spinner} from './lib'
-import {BookRow} from './book-row'
-import {Profiler} from './profiler'
+import BookRow from './Book-row'
+import Profiler from './Profiler'
 import { useListItemsState } from 'store/selectors'
 import { getListItems } from 'store/actions';
 import { useDispatch } from 'react-redux';
@@ -57,4 +57,4 @@ function ListItemList({ filterListItems, noListItems, noFilteredListItems }) {
   )
 }
 
-export {ListItemList}
+export default ListItemList;

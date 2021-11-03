@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react'
 import Tooltip from '@reach/tooltip'
 import {FaSearch, FaTimes} from 'react-icons/fa'
 import * as colors from 'styles/colors'
-import {BookRow} from 'components/book-row'
+import BookRow from 'components/Book-row'
 import {BookListUL, Spinner, Input} from 'components/lib'
-import {Profiler} from 'components/profiler'
+import Profiler from 'components/Profiler'
 import { useBooksState } from 'store/selectors'
 import { getBooks } from 'store/actions'
 import { useDispatch } from 'react-redux'
@@ -121,4 +121,4 @@ function DiscoverBooksScreen() {
   )
 }
 
-export {DiscoverBooksScreen}
+export default DiscoverBooksScreen;

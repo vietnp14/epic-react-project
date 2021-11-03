@@ -100,4 +100,4 @@ function StatusButtons({ book }) {
   );
 }
 
-export { StatusButtons };
+export default StatusButtons;

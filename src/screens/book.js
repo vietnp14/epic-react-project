@@ -10,10 +10,10 @@ import {formatDate} from 'utils/misc'
 import * as mq from 'styles/media-queries'
 import * as colors from 'styles/colors'
 import {Spinner, Textarea} from 'components/lib'
-import {Rating} from 'components/rating'
-import {Profiler} from 'components/profiler'
-import {StatusButtons} from 'components/status-buttons'
-import { useCurrentBook, useListItem, useListItemsState } from 'store/selectors'
+import Rating from 'components/Rating'
+import Profiler from 'components/Profiler'
+import StatusButtons from 'components/Status-buttons'
+import { useCurrentBook, useListItem } from 'store/selectors'
 import { getBook, updateListItem } from 'store/actions'
 import { useDispatch } from 'react-redux'
 import { useAsync } from 'utils/hooks'
@@ -112,11 +112,11 @@ function ListItemTimeframe({listItem}) {
 function NotesTextarea({ listItem }) {
   const dispatch = useDispatch();
   const { isLoading, run } = useAsync();
-  const mutate = useCallback((updates) => run(dispatch(updateListItem(updates))), [dispatch, run]);
+  const updateListItemNotes = useCallback((updates) => run(dispatch(updateListItem(updates))), [dispatch, run]);
 
   const debouncedMutate = useMemo(
-    () => debounceFn(mutate, {wait: 300}),
-    [mutate],
+    () => debounceFn(updateListItemNotes, {wait: 300}),
+    [updateListItemNotes],
   );
 
   function handleNotesChange(e) {
@@ -150,4 +150,4 @@ function NotesTextarea({ listItem }) {
   )
 }
 
-export {BookScreen}
+export default BookScreen;

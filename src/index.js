@@ -2,8 +2,8 @@ import {loadDevTools} from './dev-tools/load';
 import './bootstrap';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import {Profiler} from 'components/profiler';
-import {App} from './app';
+import Profiler from 'components/Profiler';
+import App from './App';
 import { NotificationContainer } from 'react-notifications';
 import AppProviders from 'store';
 

@@ -51,4 +51,4 @@ const Logo = ({width = '48', height = '48'}) => {
   )
 }
 
-export {Logo}
+export default Logo;

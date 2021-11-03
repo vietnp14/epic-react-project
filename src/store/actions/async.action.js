@@ -13,11 +13,10 @@ const createSuccessAction = (prefix, payload, data) => ({
   data,
 });
 
-const createFailureAction = (prefix, { message }) => ({
+const createFailureAction = (prefix, payload, err) => ({
   type: `${prefix} ${ACTION_TYPES.FAILURE}`,
-  payload: {
-    message,
-  },
+  payload,
+  err,
 });
 
 const creatAsyncAction = (prefix, payload, request, ...args) => async (dispatch) => {
@@ -27,7 +26,7 @@ const creatAsyncAction = (prefix, payload, request, ...args) => async (dispatch)
     const result = await request(...args);
     return dispatch(createSuccessAction(prefix, payload, result));
   } catch (err) {
-    dispatch(createFailureAction(prefix, err))
+    dispatch(createFailureAction(prefix, payload, err))
     throw err;
   }
 };

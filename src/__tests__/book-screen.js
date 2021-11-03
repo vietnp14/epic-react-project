@@ -12,7 +12,7 @@ import {buildBook, buildListItem} from 'test/generate'
 import * as booksDB from 'test/data/books'
 import * as listItemsDB from 'test/data/list-items'
 import {formatDate} from 'utils/misc'
-import {App} from 'app'
+import {App} from 'App'
 
 const apiURL = process.env.REACT_APP_API_URL
 

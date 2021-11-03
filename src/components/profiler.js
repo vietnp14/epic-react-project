@@ -43,4 +43,4 @@ function Profiler({metadata, phases, ...props}) {
   return <React.Profiler onRender={reportProfile} {...props} />
 }
 
-export {Profiler}
+export default Profiler;
