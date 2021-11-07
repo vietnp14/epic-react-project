@@ -2,7 +2,6 @@ const ACTION_PREFIXES = {
   // Prefix for User's actions
   LOGIN: 'Login',
   REGISTER: 'Register',
-  LOGOUT: 'Logout',
 
   // Prefix for Book's actions
   GET_BOOK: 'Get Book',
@@ -36,9 +35,7 @@ const AUTHENTICATION_ACTIONS = {
   REGISTER_FAILURE: 'Register Failure',
 
   // Log out actions
-  LOGOUT_REQUEST: 'Logout Request',
-  LOGOUT_SUCCESS: 'Logout Success',
-  LOGOUT_FAILURE: 'Logout Failure',
+  LOGOUT: 'Logout',
 };
 
 const BOOK_ACTIONS = {

@@ -4,12 +4,12 @@ import { BOOK_ACTIONS } from 'store/actions';
 import { notification } from 'utils/notification';
 
 const initialBooks = {
-  data: undefined,
+  data: null,
   isLoading: false,
 };
 
 const initialBook = {
-  data: undefined,
+  data: null,
   isLoading: false,
 }
 

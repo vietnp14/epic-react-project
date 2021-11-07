@@ -3,8 +3,8 @@ import { LIST_ITEMS_ACTIONS } from 'store/actions';
 import { notification } from 'utils/notification';
 
 const initialState = {
-  listItems: undefined,
-  isLoading: false,
+  listItems: null,
+  isFetching: false,
   isUpdating: false,
 };
 
@@ -12,18 +12,18 @@ const listItemReducer = produce((state, action) => {
   switch(action.type) {
     // Get list items
     case LIST_ITEMS_ACTIONS.GET_LIST_ITEMS_REQUEST:
-      state.isLoading = true;
+      state.isFetching = true;
       break;
 
     case LIST_ITEMS_ACTIONS.GET_LIST_ITEMS_SUCCESS:
       const { listItems } = action.data;
       state.listItems = listItems;
-      state.isLoading = false;
+      state.isFetching = false;
       break;
 
     case LIST_ITEMS_ACTIONS.GET_LIST_ITEMS_FAILURE:
       state.error = { message: action.payload.message };
-      state.isLoading = false;
+      state.isFetching = false;
       break;
 
     // Add list item

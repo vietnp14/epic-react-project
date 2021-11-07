@@ -19,19 +19,19 @@ const createFailureAction = (prefix, payload, err) => ({
   err,
 });
 
-const creatAsyncAction = (prefix, payload, request, ...args) => async (dispatch) => {
+const createAsyncAction = (prefix, payload, request, ...args) => async (dispatch) => {
   dispatch(createRequestAction(prefix, payload));
 
   try {
     const result = await request(...args);
     return dispatch(createSuccessAction(prefix, payload, result));
   } catch (err) {
-    dispatch(createFailureAction(prefix, payload, err))
+    dispatch(createFailureAction(prefix, payload, err));
     throw err;
   }
 };
 
-const loadBootstrapData = () => async (dispatch) => {
+export const loadBootstrapData = () => async (dispatch) => {
   try {
     const { user, listItems } = await axiosClient('/bootstrap');
     dispatch(createSuccessAction(ACTION_PREFIXES.LOGIN, {}, user));
@@ -39,7 +39,6 @@ const loadBootstrapData = () => async (dispatch) => {
   } catch (err) {
     throw err;
   }
-}
+};
 
-export { loadBootstrapData };
-export default creatAsyncAction;
+export default createAsyncAction;

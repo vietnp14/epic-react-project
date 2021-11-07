@@ -11,8 +11,9 @@ import FinishedScreen from './screens/Finished'
 import DiscoverBooksScreen from './screens/Discover'
 import BookScreen from './screens/Book'
 import NotFoundScreen from './screens/Not-found'
-import { logout } from 'auth-provider';
 import { useAuthenticationState } from 'store/selectors/index';
+import { useDispatch } from 'react-redux'
+import { logout } from 'store/actions';
 
 function ErrorFallback({error}) {
   return (
@@ -30,7 +31,12 @@ function ErrorFallback({error}) {
 }
 
 function AuthenticatedApp() {
+  const dispatch = useDispatch();
   const { user } = useAuthenticationState();
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <ErrorBoundary FallbackComponent={FullPageErrorFallback}>
@@ -44,7 +50,7 @@ function AuthenticatedApp() {
         }}
       >
         {user.username}
-        <Button variant="secondary" css={{marginLeft: '10px'}} onClick={logout}>
+        <Button variant="secondary" css={{marginLeft: '10px'}} onClick={handleLogout}>
           Logout
         </Button>
       </div>

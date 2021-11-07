@@ -3,7 +3,7 @@ import {jsx} from '@emotion/core'
 
 import * as React from 'react'
 import {queryCache} from 'react-query'
-import * as auth from 'auth-provider'
+import storage from 'utils/auth-client'
 import {client} from 'utils/api-client'
 import {useAsync} from 'utils/hooks'
 import {setQueryDataForBook} from 'utils/books'
@@ -13,7 +13,7 @@ import { useAuthenticationState } from 'store/selectors'
 async function bootstrapAppData() {
   let user = null
 
-  const token = await auth.getToken()
+  const token = await storage.getToken();
   if (token) {
     const data = await client('bootstrap', {token})
     queryCache.setQueryData('list-items', data.listItems, {
@@ -49,17 +49,17 @@ function AuthProvider(props) {
   }, [run])
 
   const login = React.useCallback(
-    form => auth.login(form).then(user => setData(user)),
+    form => storage.login(form).then(user => setData(user)),
     [setData],
   )
 
   const register = React.useCallback(
-    form => auth.register(form).then(user => setData(user)),
+    form => storage.register(form).then(user => setData(user)),
     [setData],
   )
 
   const logout = React.useCallback(() => {
-    auth.logout()
+    storage.logout()
     queryCache.clear()
     setData(null)
   }, [setData])

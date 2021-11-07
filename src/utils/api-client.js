@@ -1,6 +1,5 @@
-import {queryCache} from 'react-query'
-import * as auth from 'auth-provider'
 import axios from 'axios';
+import * as storage from 'utils/storage';
 const apiURL = process.env.REACT_APP_API_URL;
 
 const axiosConfig = {
@@ -11,7 +10,7 @@ const axiosClient = axios.create(axiosConfig);
 
 axiosClient.interceptors.request.use(
   async (config) => {
-    const token = await auth.getToken();
+    const token = await storage.getToken();
     const headers = {
       Authorization: token ? `Bearer ${token}` : undefined,
     };
@@ -21,13 +20,6 @@ axiosClient.interceptors.request.use(
 
 axiosClient.interceptors.response.use(
   async (response) => {
-    if (response.status === 401) {
-      await auth.logout();
-      // refresh the page for them
-      window.location.assign(window.location);
-      return Promise.reject({ message: 'Please re-authenticate.' });
-    }
-
     if (response && response.statusText === 'OK' && response.data) {
       return response.data;
     }
@@ -55,14 +47,6 @@ async function client(
   }
 
   return window.fetch(`${apiURL}/${endpoint}`, config).then(async response => {
-    if (response.status === 401) {
-      queryCache.clear()
-      await auth.logout()
-      // refresh the page for them
-      window.location.assign(window.location)
-      return Promise.reject({message: 'Please re-authenticate.'})
-    }
-
     const data = await response.json()
     if (response.ok) {
       return data

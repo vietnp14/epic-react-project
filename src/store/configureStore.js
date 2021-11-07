@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import { asyncMiddleware, loggerMiddleware } from './middlewares';
+import { asyncMiddleware, loggerMiddleware, authMiddleware } from './middlewares';
 import rootReducers from './reducers';
 
 const isDevEnvironment = process.env.NODE_ENV === 'development';
@@ -7,6 +7,7 @@ const composeEnhancers = (isDevEnvironment && window.__REDUX_DEVTOOLS_EXTENSION_
 
 const middlewares = [
   asyncMiddleware,
+  authMiddleware,
   ...(isDevEnvironment && [loggerMiddleware]),
 ];
 

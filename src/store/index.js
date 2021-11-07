@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import store from './configureStore';
 import { Provider } from 'react-redux';
-import * as auth from 'auth-provider';
+import * as storage from 'utils/storage';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { useAsync } from 'utils/hooks';
 import { FullPageSpinner } from 'components/lib';
@@ -12,7 +12,7 @@ const AppProviders = ({ children }) => {
 
   useEffect(() => {
     (async () => {
-      const token = await auth.getToken();
+      const token = await storage.getToken();
       if (token) {
         run(store.dispatch(loadBootstrapData()));
       }

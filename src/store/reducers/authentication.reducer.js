@@ -3,7 +3,7 @@ import { AUTHENTICATION_ACTIONS } from "store/actions";
 import { notification } from 'utils/notification';
 
 const initialState = {
-  user: undefined,
+  user: null,
   isLoading: false,
 };
 

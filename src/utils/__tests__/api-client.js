@@ -1,5 +1,5 @@
 import {queryCache} from 'react-query'
-import * as auth from 'auth-provider'
+import * as auth from 'utils/auth-client'
 import {server, rest} from 'test/server'
 import {client} from '../api-client'
 

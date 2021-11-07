@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 
 function ListItemList({ filterListItems, noListItems, noFilteredListItems }) {
   const dispatch = useDispatch();
-  const { listItems, isLoading } = useListItemsState();
+  const { listItems, isFetching } = useListItemsState();
 
   const filteredListItems = listItems.filter(filterListItems);
 
@@ -19,7 +19,7 @@ function ListItemList({ filterListItems, noListItems, noFilteredListItems }) {
     dispatch(getListItems());
   }, [dispatch]);
 
-  if (isLoading) {
+  if (isFetching) {
     return (
       <div css={{width: '100%', margin: 'auto', textAlign: 'center'}}>
         <Spinner />
