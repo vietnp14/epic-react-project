@@ -24,10 +24,17 @@ const createAsyncAction = (prefix, payload, request, ...args) => async (dispatch
 
   try {
     const result = await request(...args);
-    return dispatch(createSuccessAction(prefix, payload, result));
+    dispatch(createSuccessAction(prefix, payload, result));
+    return {
+      success: true,
+      data: result,
+    };
   } catch (err) {
     dispatch(createFailureAction(prefix, payload, err));
-    throw err;
+    return {
+      success: false,
+      error: err,
+    };
   }
 };
 
@@ -36,8 +43,15 @@ export const loadBootstrapData = () => async (dispatch) => {
     const { user, listItems } = await axiosClient('/bootstrap');
     dispatch(createSuccessAction(ACTION_PREFIXES.LOGIN, {}, user));
     dispatch(createSuccessAction(ACTION_PREFIXES.GET_LIST_ITEMS, {}, { listItems }));
+
+    return {
+      success: true
+    };
   } catch (err) {
-    throw err;
+    return {
+      success: false,
+      error: err,
+    };
   }
 };
 

@@ -1,23 +1,28 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import store from './configureStore';
 import { Provider } from 'react-redux';
 import * as storage from 'utils/storage';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { useAsync } from 'utils/hooks';
 import { FullPageSpinner } from 'components/lib';
 import { loadBootstrapData } from './actions/async.action';
+import { notification } from 'utils/notification';
 
 const AppProviders = ({ children }) => {
-  const { isLoading, run } = useAsync();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
+      setIsLoading(true);
       const token = await storage.getToken();
       if (token) {
-        run(store.dispatch(loadBootstrapData()));
+        const { error } = await store.dispatch(loadBootstrapData());
+        if (!!error) {
+          notification.error('Bootstrap', 'Loading bootstrap data failed!');
+        }
       }
+      setIsLoading(false);
     })();
-  }, [run]);
+  }, []);
 
   if (isLoading) {
     return (<FullPageSpinner />);
