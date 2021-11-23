@@ -4,7 +4,7 @@ import {jsx} from '@emotion/core'
 import {Link} from 'react-router-dom'
 import * as mq from 'styles/media-queries'
 import * as colors from 'styles/colors'
-import StatusButtons from './Status-buttons'
+import StatusButtons from './StatusButtons'
 import Rating from './Rating'
 import { useListItem } from 'store/selectors'
 

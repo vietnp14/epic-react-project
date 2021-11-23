@@ -12,14 +12,14 @@ import * as colors from 'styles/colors'
 import {Spinner, Textarea} from 'components/lib'
 import Rating from 'components/Rating'
 import Profiler from 'components/Profiler'
-import StatusButtons from 'components/Status-buttons'
+import StatusButtons from 'components/StatusButtons'
 import { useCurrentBook, useListItem } from 'store/selectors'
 import { BOOK_ACTIONS, LIST_ITEMS_ACTIONS, getBook, updateListItem } from 'store/actions'
 import { useDispatch } from 'react-redux'
 import { notification } from 'utils/notification'
-import { loadingBook } from 'utils/loading-constant'
+import { loadingBook } from 'utils/loadingConstants'
 
-function BookScreen() {
+function Book() {
   const { bookId } = useParams();
   const dispatch = useDispatch();
   const { data: book } = useCurrentBook();
@@ -167,4 +167,4 @@ function NotesTextarea({ listItem }) {
   )
 }
 
-export default BookScreen;
+export default Book;

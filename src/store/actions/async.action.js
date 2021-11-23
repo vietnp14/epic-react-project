@@ -1,4 +1,4 @@
-import { axiosClient } from "utils/api-client";
+import { axiosClient } from "utils/apiClient";
 import { ACTION_PREFIXES } from ".";
 import { ACTION_TYPES } from "./types.action";
 

@@ -1,10 +1,15 @@
-import { handleUserResponse } from './storage';
+import { handleUserResponse, removeStorageKey } from './storage';
 
 const authURL = process.env.REACT_APP_AUTH_URL;
 
 const login = ({username, password}) => client('login', {username, password}).then(handleUserResponse);
 
 const register = ({username, password}) => client('register', {username, password}).then(handleUserResponse);
+
+const logout = () => {
+  removeStorageKey();
+  window.location.assign(window.location.href);
+};
 
 async function client(endpoint, data) {
   const config = {
@@ -24,4 +29,8 @@ async function client(endpoint, data) {
   });
 };
 
-export {login, register};
+export {
+  login,
+  register,
+  logout,
+};

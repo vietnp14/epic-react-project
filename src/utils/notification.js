@@ -1,6 +1,6 @@
 import { NotificationManager } from 'react-notifications';
 
-const timeOut = 2500;
+const timeOut = 2000;
 
 const notification = {
   info: (title, message) => NotificationManager.info(message, title, timeOut),

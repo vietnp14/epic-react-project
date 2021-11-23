@@ -1,5 +1,5 @@
 import createAsyncAction from './async.action';
-import { axiosClient } from 'utils/api-client';
+import { axiosClient } from 'utils/apiClient';
 import { ACTION_PREFIXES } from './types.action';
 
 const resetListItemError = () => ({

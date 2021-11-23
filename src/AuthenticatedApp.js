@@ -7,11 +7,11 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {Button, ErrorMessage, FullPageErrorFallback} from './components/lib'
 import * as mq from './styles/media-queries'
 import * as colors from './styles/colors'
-import ReadingListScreen from './screens/Reading-list'
-import FinishedScreen from './screens/Finished'
-import DiscoverBooksScreen from './screens/Discover'
-import BookScreen from './screens/Book'
-import NotFoundScreen from './screens/Not-found'
+import ReadingList from './screens/ReadingList'
+import Finished from './screens/Finished'
+import DiscoverBooks from './screens/DiscoverBooks'
+import Book from './screens/Book'
+import NotFound from './screens/NotFound'
 import { useAuthenticationState } from 'store/selectors/index';
 import { useDispatch } from 'react-redux'
 import { AUTHENTICATION_ACTIONS, logout } from 'store/actions';
@@ -164,11 +164,11 @@ function Nav() {
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/list" element={<ReadingListScreen />} />
-      <Route path="/finished" element={<FinishedScreen />} />
-      <Route path="/discover" element={<DiscoverBooksScreen />} />
-      <Route path="/book/:bookId" element={<BookScreen />} />
-      <Route path="*" element={<NotFoundScreen />} />
+      <Route path="/list" element={<ReadingList />} />
+      <Route path="/finished" element={<Finished />} />
+      <Route path="/discover" element={<DiscoverBooks />} />
+      <Route path="/book/:bookId" element={<Book />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }

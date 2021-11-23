@@ -17,7 +17,7 @@ const AppProviders = ({ children }) => {
       if (token) {
         const { error } = await store.dispatch(loadBootstrapData());
         if (!!error) {
-          notification.error('Bootstrap', 'Loading bootstrap data failed!');
+          notification.error('Get Bootstrap Data', 'Loading bootstrap data failed!');
         }
       }
       setIsLoading(false);

@@ -4,7 +4,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import * as auth from 'utils/auth-client'
+import * as auth from 'utils/authClient'
 import {buildUser} from 'test/generate'
 import * as usersDB from 'test/data/users'
 import {AppProviders} from 'context'

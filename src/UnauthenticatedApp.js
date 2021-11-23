@@ -62,30 +62,35 @@ function UnauthenticatedApp() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLoginSubmit = useCallback(async (formValue) => {
+  const handleAuthentication = useCallback((isLogin = false) => async (formValue) => {
     setIsLoading(true);
-    const { data, error } = await dispatch(login(formValue));
+    const action = isLogin ? login(formValue) : register(formValue);
+    const { data, error } = await dispatch(action);
     setIsLoading(false);
 
     if (!!error) {
       notification.error('Authentication Failure', error.message);
     } else {
-      await dispatch(loadBootstrapData());
-      notification.success(AUTHENTICATION_ACTIONS.LOGIN_SUCCESS, `Welcome ${data.username}. Have a nice day!`);
+      dispatch(loadBootstrapData());
+      notification.success(
+        isLogin ? AUTHENTICATION_ACTIONS.LOGIN_SUCCESS : AUTHENTICATION_ACTIONS.REGISTER_SUCCESS,
+        `Welcome ${data.username}. Have a nice day!`
+      );
     }
   }, [dispatch]);
 
-  const handleLoginRegister = useCallback(async (formValue) => {
-    const { data, error } = await dispatch(register(formValue));
-    setIsLoading(false);
+  // const handleLoginRegister = useCallback(async (formValue) => {
+  //   setIsLoading(true);
+  //   const { data, error } = await dispatch(register(formValue));
+  //   setIsLoading(false);
 
-    if (!!error) {
-      notification.error('Authentication Failure', error.message);
-    } else {
-      await dispatch(loadBootstrapData());
-      notification.success(AUTHENTICATION_ACTIONS.REGISTER_SUCCESS, `Welcome ${data.username}. Have a nice day!`);
-    }
-  }, [dispatch]);
+  //   if (!!error) {
+  //     notification.error('Authentication Failure', error.message);
+  //   } else {
+  //     dispatch(loadBootstrapData());
+  //     notification.success(AUTHENTICATION_ACTIONS.REGISTER_SUCCESS, `Welcome ${data.username}. Have a nice day!`);
+  //   }
+  // }, [dispatch]);
 
   return (
     <div
@@ -114,7 +119,7 @@ function UnauthenticatedApp() {
           <ModalContents aria-label="Login form" title="Login">
             <LoginForm
               isLoading={isLoading}
-              onSubmit={handleLoginSubmit}
+              onSubmit={handleAuthentication(true)}
               submitButton={<Button variant="primary">Login</Button>}
             />
           </ModalContents>
@@ -126,7 +131,7 @@ function UnauthenticatedApp() {
           <ModalContents aria-label="Registration form" title="Register">
             <LoginForm
               isLoading={isLoading}
-              onSubmit={handleLoginRegister}
+              onSubmit={handleAuthentication()}
               submitButton={<Button variant="secondary">Register</Button>}
             />
           </ModalContents>

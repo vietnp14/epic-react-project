@@ -3,9 +3,9 @@ import {FullPageSpinner} from './components/lib'
 import { useAuthenticationState } from 'store/selectors'
 
 const AuthenticatedApp = React.lazy(() =>
-  import(/* webpackPrefetch: true */ './Authenticated-app'),
+  import(/* webpackPrefetch: true */ './AuthenticatedApp'),
 )
-const UnauthenticatedApp = React.lazy(() => import('./Unauthenticated-app'))
+const UnauthenticatedApp = React.lazy(() => import('./UnauthenticatedApp'))
 
 function App() {
   const { user } = useAuthenticationState();

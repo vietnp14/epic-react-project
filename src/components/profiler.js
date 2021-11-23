@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {axiosClient} from 'utils/api-client'
+import {axiosClient} from 'utils/apiClient'
 
 let queue = []
 

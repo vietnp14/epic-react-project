@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {Link} from 'components/lib'
-import ListItemList from 'components/List-item-list'
+import ListItemList from 'components/ListItemList'
 
 const NoListItems = () => (
   <p>
@@ -19,7 +19,7 @@ const NoFilteredListItems = () => (
   </p>
 );
 
-function FinishedScreen() {
+function Finished() {
   return (
     <ListItemList
       filterListItems={li => Boolean(li.finishDate)}
@@ -29,4 +29,4 @@ function FinishedScreen() {
   )
 }
 
-export default FinishedScreen;
+export default Finished;

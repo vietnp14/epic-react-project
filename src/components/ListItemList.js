@@ -1,25 +1,34 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {BookListUL, Spinner} from './lib'
-import BookRow from './Book-row'
+import BookRow from './BookRow'
 import Profiler from './Profiler'
 import { useListItemsState } from 'store/selectors'
-import { getListItems } from 'store/actions';
+import { getListItems, LIST_ITEMS_ACTIONS } from 'store/actions';
 import { useDispatch } from 'react-redux';
+import { notification } from 'utils/notification';
 
 function ListItemList({ filterListItems, noListItems, noFilteredListItems }) {
   const dispatch = useDispatch();
-  const { listItems, isFetching } = useListItemsState();
+  const [isLoading, setIsLoading] = useState(true);
+  const { listItems } = useListItemsState();
 
   const filteredListItems = listItems.filter(filterListItems);
 
   useEffect(() => {
-    dispatch(getListItems());
+    (async () => {
+      const { error } = await dispatch(getListItems());
+
+      if (!!error) {
+        notification.error(LIST_ITEMS_ACTIONS.GET_LIST_ITEMS_FAILURE, error.message);
+      }
+      setIsLoading(false);
+    })();
   }, [dispatch]);
 
-  if (isFetching) {
+  if (isLoading) {
     return (
       <div css={{width: '100%', margin: 'auto', textAlign: 'center'}}>
         <Spinner />

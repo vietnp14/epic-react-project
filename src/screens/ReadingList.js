@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {Link} from 'components/lib'
-import ListItemList from 'components/List-item-list'
+import ListItemList from 'components/ListItemList'
 
 const NoListItems = () => (
   <p>
@@ -18,7 +18,7 @@ const NoFilteredListItems = () => (
   </p>
 );
 
-function ReadingListScreen() {
+function ReadingList() {
   return (
     <ListItemList
       filterListItems={li => !li.finishDate}
@@ -28,4 +28,4 @@ function ReadingListScreen() {
   )
 }
 
-export default ReadingListScreen;
+export default ReadingList;

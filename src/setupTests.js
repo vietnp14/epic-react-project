@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/extend-expect'
 import {configure, act, waitFor} from '@testing-library/react'
 import {queryCache} from 'react-query'
-import * as auth from 'utils/auth-client'
+import * as auth from 'utils/authClient'
 import {server} from 'test/server'
 import * as usersDB from 'test/data/users'
 import * as listItemsDB from 'test/data/list-items'

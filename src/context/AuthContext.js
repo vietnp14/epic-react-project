@@ -3,8 +3,9 @@ import {jsx} from '@emotion/core'
 
 import * as React from 'react'
 import {queryCache} from 'react-query'
-import storage from 'utils/auth-client'
-import {client} from 'utils/api-client'
+import auth from 'utils/authClient'
+import * as storage from 'utils/storage'
+import {client} from 'utils/apiClient'
 import {useAsync} from 'utils/hooks'
 import {setQueryDataForBook} from 'utils/books'
 import {FullPageSpinner, FullPageErrorFallback} from 'components/lib'
@@ -49,17 +50,17 @@ function AuthProvider(props) {
   }, [run])
 
   const login = React.useCallback(
-    form => storage.login(form).then(user => setData(user)),
+    form => auth.login(form).then(user => setData(user)),
     [setData],
   )
 
   const register = React.useCallback(
-    form => storage.register(form).then(user => setData(user)),
+    form => auth.register(form).then(user => setData(user)),
     [setData],
   )
 
   const logout = React.useCallback(() => {
-    storage.logout()
+    auth.logout()
     queryCache.clear()
     setData(null)
   }, [setData])
