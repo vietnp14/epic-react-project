@@ -2,17 +2,17 @@
 import {jsx} from '@emotion/core'
 
 import {Link} from 'react-router-dom'
-import {useListItem} from 'utils/list-items'
 import * as mq from 'styles/media-queries'
 import * as colors from 'styles/colors'
-import {StatusButtons} from './status-buttons'
-import {Rating} from './rating'
+import StatusButtons from './StatusButtons'
+import Rating from './Rating'
+import { useListItem } from 'store/selectors'
 
-function BookRow({book}) {
-  const {title, author, coverImageUrl} = book
-  const listItem = useListItem(book.id)
+function BookRow({ book }) {
+  const { title, author, coverImageUrl } = book;
+  const listItem = useListItem(book.id);
 
-  const id = `book-row-book-${book.id}`
+  const id = `book-row-book-${book.id}`;
 
   return (
     <div
@@ -105,7 +105,7 @@ function BookRow({book}) {
         <StatusButtons book={book} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export {BookRow}
+export default BookRow;

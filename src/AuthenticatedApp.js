@@ -1,17 +1,21 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
+import { useCallback } from 'react'
 import {Routes, Route, Link as RouterLink, useMatch} from 'react-router-dom'
 import {ErrorBoundary} from 'react-error-boundary'
 import {Button, ErrorMessage, FullPageErrorFallback} from './components/lib'
 import * as mq from './styles/media-queries'
 import * as colors from './styles/colors'
-import {useAuth} from './context/auth-context'
-import {ReadingListScreen} from './screens/reading-list'
-import {FinishedScreen} from './screens/finished'
-import {DiscoverBooksScreen} from './screens/discover'
-import {BookScreen} from './screens/book'
-import {NotFoundScreen} from './screens/not-found'
+import ReadingList from './screens/ReadingList'
+import Finished from './screens/Finished'
+import DiscoverBooks from './screens/DiscoverBooks'
+import Book from './screens/Book'
+import NotFound from './screens/NotFound'
+import { useAuthenticationState } from 'store/selectors/index';
+import { useDispatch } from 'react-redux'
+import { AUTHENTICATION_ACTIONS, logout } from 'store/actions';
+import { notification } from 'utils/notification'
 
 function ErrorFallback({error}) {
   return (
@@ -29,7 +33,19 @@ function ErrorFallback({error}) {
 }
 
 function AuthenticatedApp() {
-  const {user, logout} = useAuth()
+  const dispatch = useDispatch();
+  const { user } = useAuthenticationState();
+
+  const handleLogout = useCallback(async () => {
+    const { error } = await dispatch(logout());
+
+    if (!!error) {
+      notification.error(AUTHENTICATION_ACTIONS.LOGOUT, 'Please try again.');
+    } else {
+      notification.success(AUTHENTICATION_ACTIONS.LOGOUT, 'You have logged out successfully!');
+    }
+  }, [dispatch]);
+
   return (
     <ErrorBoundary FallbackComponent={FullPageErrorFallback}>
       <div
@@ -42,7 +58,7 @@ function AuthenticatedApp() {
         }}
       >
         {user.username}
-        <Button variant="secondary" css={{marginLeft: '10px'}} onClick={logout}>
+        <Button variant="secondary" css={{marginLeft: '10px'}} onClick={handleLogout}>
           Logout
         </Button>
       </div>
@@ -110,7 +126,7 @@ function NavLink(props) {
   )
 }
 
-function Nav(params) {
+function Nav() {
   return (
     <nav
       css={{
@@ -148,13 +164,13 @@ function Nav(params) {
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/list" element={<ReadingListScreen />} />
-      <Route path="/finished" element={<FinishedScreen />} />
-      <Route path="/discover" element={<DiscoverBooksScreen />} />
-      <Route path="/book/:bookId" element={<BookScreen />} />
-      <Route path="*" element={<NotFoundScreen />} />
+      <Route path="/list" element={<ReadingList />} />
+      <Route path="/finished" element={<Finished />} />
+      <Route path="/discover" element={<DiscoverBooks />} />
+      <Route path="/book/:bookId" element={<Book />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }
 
-export default AuthenticatedApp
+export default AuthenticatedApp;

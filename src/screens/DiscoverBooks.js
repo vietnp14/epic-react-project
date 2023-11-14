@@ -1,24 +1,46 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import * as React from 'react'
+import { useEffect, useState } from 'react'
 import Tooltip from '@reach/tooltip'
 import {FaSearch, FaTimes} from 'react-icons/fa'
 import * as colors from 'styles/colors'
-import {useBookSearch, useRefetchBookSearchQuery} from 'utils/books'
-import {BookRow} from 'components/book-row'
+import BookRow from 'components/BookRow'
 import {BookListUL, Spinner, Input} from 'components/lib'
-import {Profiler} from 'components/profiler'
+import Profiler from 'components/Profiler'
+import { useBooksState } from 'store/selectors'
+import { getBooks } from 'store/actions'
+import { useDispatch } from 'react-redux'
+import { notification } from 'utils/notification'
+import { BOOK_ACTIONS } from 'store/actions'
+import { loadingBooks } from 'utils/loadingConstants'
 
-function DiscoverBooksScreen() {
-  const [query, setQuery] = React.useState('')
-  const [queried, setQueried] = React.useState()
-  const {books, error, isLoading, isError, isSuccess} = useBookSearch(query)
-  const refetchBookSearchQuery = useRefetchBookSearchQuery()
+function DiscoverBooks() {
+  const dispatch = useDispatch();
+  const [bookState, setBookState] = useState({ loading: false, data: null, error: null });
+  const [query, setQuery] = useState('');
+  const [queried, setQueried] = useState();
+  const { data: books } = useBooksState();
 
-  React.useEffect(() => {
-    return () => refetchBookSearchQuery()
-  }, [refetchBookSearchQuery])
+  const isLoading = bookState.loading;
+  const isSuccess = !!bookState.data;
+  const isError = !!bookState.error;
+  const error = bookState.error;
+  const data = !books && isLoading ? loadingBooks : books;
+
+  useEffect(() => {
+    (async () => {
+      setBookState({ loading: true, data: null, error: null });
+      const { error, data } = await dispatch(getBooks(query));
+
+      if (!!error) {
+        setBookState({ loading: false, error });
+        notification.error(BOOK_ACTIONS.GET_BOOKS_FAILURE, error.message);
+      } else {
+        setBookState({ loading: false, data });
+      }
+    })()
+  }, [dispatch, query]);
 
   function handleSearchClick(event) {
     event.preventDefault()
@@ -84,13 +106,13 @@ function DiscoverBooksScreen() {
             ) : null}
           </div>
         )}
-        {books.length ? (
+        {data?.length ? (
           <Profiler
             id="Discover Books Screen Book List"
-            metadata={{query, bookCount: books.length}}
+            metadata={{query, bookCount: data.length}}
           >
             <BookListUL css={{marginTop: 20}}>
-              {books.map(book => (
+              {data.map(book => (
                 <li key={book.id} aria-label={book.title}>
                   <BookRow key={book.id} book={book} />
                 </li>
@@ -116,4 +138,4 @@ function DiscoverBooksScreen() {
   )
 }
 
-export {DiscoverBooksScreen}
+export default DiscoverBooks;

@@ -3,16 +3,18 @@ import {jsx} from '@emotion/core'
 
 import * as React from 'react'
 import {queryCache} from 'react-query'
-import * as auth from 'auth-provider'
-import {client} from 'utils/api-client'
+import auth from 'utils/authClient'
+import * as storage from 'utils/storage'
+import {client} from 'utils/apiClient'
 import {useAsync} from 'utils/hooks'
 import {setQueryDataForBook} from 'utils/books'
 import {FullPageSpinner, FullPageErrorFallback} from 'components/lib'
+import { useAuthenticationState } from 'store/selectors'
 
 async function bootstrapAppData() {
   let user = null
 
-  const token = await auth.getToken()
+  const token = await storage.getToken();
   if (token) {
     const data = await client('bootstrap', {token})
     queryCache.setQueryData('list-items', data.listItems, {
@@ -51,10 +53,12 @@ function AuthProvider(props) {
     form => auth.login(form).then(user => setData(user)),
     [setData],
   )
+
   const register = React.useCallback(
     form => auth.register(form).then(user => setData(user)),
     [setData],
   )
+
   const logout = React.useCallback(() => {
     auth.logout()
     queryCache.clear()
@@ -90,8 +94,9 @@ function useAuth() {
 }
 
 function useClient() {
-  const {user} = useAuth()
-  const token = user?.token
+  const {user} = useAuthenticationState();
+  const token = user?.token;
+
   return React.useCallback(
     (endpoint, config) => client(endpoint, {...config, token}),
     [token],

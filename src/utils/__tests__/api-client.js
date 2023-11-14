@@ -1,7 +1,7 @@
 import {queryCache} from 'react-query'
-import * as auth from 'auth-provider'
+import * as auth from 'utils/authClient'
 import {server, rest} from 'test/server'
-import {client} from '../api-client'
+import {client} from '../apiClient'
 
 const apiURL = process.env.REACT_APP_API_URL
 
